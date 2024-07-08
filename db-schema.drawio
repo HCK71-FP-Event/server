@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="K8Lnhgna5GNcGeuLePnz" name="Page-1">
-        <mxGraphModel dx="722" dy="243" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1002" dy="336" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -372,7 +372,7 @@
                         <mxPoint x="450" y="200" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="96" value="MVP&lt;br&gt;1.&amp;nbsp;&lt;span style=&quot;text-align: left; background-color: initial;&quot;&gt;user dapat mencari event terdekat dari posisi user sekarang, user juga dapat mendaftar ke event tersebut (geolocation)&lt;br&gt;&lt;br&gt;2.&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-align: left; background-color: initial;&quot;&gt;user dapat mendaftarkan event baru.&lt;br&gt;&lt;br&gt;3. User dapat melakukan transaksi untuk pembelian tiket event (midtrans)&lt;br&gt;&lt;br&gt;4. Event yang sudah didaftarkan muncul juga di google calendar&lt;br&gt;&lt;br&gt;5. User mendapat notifikasi ketika sudah melakukan pembayaran dan ketika ada event terdekat dari lokasi user&lt;br&gt;&lt;br&gt;6. User dapat berkomunikasi dengan customer service via chat (firebase)&lt;br&gt;&lt;/span&gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="96" value="MVP&lt;br&gt;1.&amp;nbsp;&lt;span style=&quot;text-align: left; background-color: initial;&quot;&gt;user dapat mencari event terdekat dari posisi user sekarang, user juga dapat mendaftar ke event tersebut (geolocation)&lt;br&gt;&lt;br&gt;2.&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-align: left; background-color: initial;&quot;&gt;user dapat mendaftarkan event baru.&lt;br&gt;&lt;br&gt;3. User dapat melakukan transaksi untuk pembelian tiket event (midtrans)&lt;br&gt;&lt;br&gt;4. Event yang sudah didaftarkan muncul juga di google calendar.&lt;br&gt;&lt;br&gt;5. User mendapat notifikasi ketika sudah melakukan pembayaran dan ketika ada event terdekat dari lokasi user&lt;br&gt;&lt;br&gt;6. User dapat berkomunikasi dengan customer service via chat (firebase)&lt;br&gt;&lt;/span&gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="60" y="370" width="540" height="320" as="geometry"/>
                 </mxCell>
             </root>
