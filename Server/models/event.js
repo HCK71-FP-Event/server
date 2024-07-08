@@ -14,10 +14,61 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Event.init({
-    name: DataTypes.STRING,
-    imageUrl: DataTypes.STRING,
-    eventDate: DataTypes.DATE,
-    CategoryId: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "name cannot be empty"
+        },
+        notNull: {
+          msg: "name cannot be empty"
+        }
+      }
+    },
+    imageUrl: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate: {
+        notEmpty: {
+          msg: "imageUrl cannot be empty"
+        },
+        notNull: {
+          msg: "imageUrl cannot be empty"
+        }
+      }
+    },
+    location: {
+      type:DataTypes.GEOMETRY,
+      allowNull:false,
+      validate: {}
+    },
+    CategoryId: DataTypes.INTEGER,
+    eventDate: {
+      type:DataTypes.DATE,
+      allowNull:false,
+      validate: {
+        notEmpty:{
+          msg: "eventDate cannot be empty"
+        },
+        notNull: {
+          msg: "eventDate cannot be empty"
+        }
+      }
+    },
+    quantity: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate: {
+        notEmpty: {
+          msg: "quantity cannot be empty"
+        },
+        notNull: {
+          msg: "quantity cannot be empty"
+        }
+      }
+    },
+    isFree: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Event',
