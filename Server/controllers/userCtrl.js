@@ -1,38 +1,38 @@
-const {User} = require("../models/index")
-const {comparePass} = require("../helpers/bcrypt")
-const {createToken} = require("../helpers/jsonwebtoken")
+const { User } = require("../models/index")
+const { comparePass } = require("../helpers/bcrypt")
+const { createToken } = require("../helpers/jsonwebtoken")
 
 
 class userCtrl {
-    static async register(req,res,next){
+    static async register(req, res, next) {
         try {
             const user = await User.create(req.body)
-            res.status(201).json({id: user.id, email:user.email})
+            res.status(201).json({ id: user.id, email: user.email })
         } catch (error) {
             console.log(error);
         }
     }
 
-    static async login(req,res,next){
+    static async login(req, res, next) {
         try {
-            const {email, password} = req.body 
+            const { email, password } = req.body
 
-            if(!email) throw {name: "Email Empty"}
-            if(!password) throw {name: "Password Empty"}
+            if (!email) throw { name: "Email Empty" }
+            if (!password) throw { name: "Password Empty" }
 
-            const user = await User.findOne({where: {email}})
-            if(!user) throw {name: "Invalid Login"}
+            const user = await User.findOne({ where: { email } })
+            if (!user) throw { name: "Invalid Login" }
 
             const result = comparePass(password, user.password)
-            if(!result) throw {name: "Invalid Login"}
+            if (!result) throw { name: "Invalid Login" }
 
-            const token = createToken({id: user.id})
-            res.status(200).json({access_token :token})
-            
+            const token = createToken({ id: user.id })
+            res.status(200).json({ access_token: token })
+
         } catch (error) {
             console.log(error);
         }
     }
 }
 
-module.exports = {userCtrl}
+module.exports = { userCtrl }
