@@ -1,10 +1,11 @@
-const express = require("express")
-const {userCtrl} = require("../controllers/userCtrl")
+const express = require("express");
+const { userCtrl } = require("../controllers/userCtrl");
+const { eventCtrl } = require("../controllers/eventCtrl");
 
-const router = express.Router()
+const router = express.Router();
 
+router.post("/register", userCtrl.register);
+router.post("/login", userCtrl.login);
+router.get("/event", eventCtrl.findEventsByRadius);
 
-router.post("/register", userCtrl.register)
-router.post("/login", userCtrl.login)
-
-module.exports = router
+module.exports = router;
