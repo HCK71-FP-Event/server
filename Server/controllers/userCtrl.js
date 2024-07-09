@@ -9,6 +9,7 @@ class userCtrl {
             const user = await User.create(req.body)
             res.status(201).json({ id: user.id, email: user.email })
         } catch (error) {
+            next(error)
             console.log(error);
         }
     }
@@ -30,6 +31,7 @@ class userCtrl {
             res.status(200).json({ access_token: token })
 
         } catch (error) {
+            next(error)
             console.log(error);
         }
     }
