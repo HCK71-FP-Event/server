@@ -86,40 +86,40 @@ describe("POST /login", () => {
             expect(body).toHaveProperty("message", "Email cannot be empty")
 
         }, 23000)
-        // test("Password tidak diberikan/ tidak diinput", async () => {
-        //     const { status, body } = await request(app)
-        //         .post("/login")
-        //         .send({
-        //             email: "halo@mail.com",
-        //             password:""
-        //         })
+        test("Password tidak diberikan/ tidak diinput", async () => {
+            const { status, body } = await request(app)
+                .post("/login")
+                .send({
+                    email: "halo@mail.com",
+                    password:""
+                })
 
 
-        //     expect(status).toBe(401)
-        //     expect(body).toHaveProperty("message", "Password cannot be empty")
-        // }, 13000)
-        // test("Email / Password yang diberikan invalid / tidak terdaftar", async () => {
-        //     const { status, body } = await request(app)
-        //         .post("/login")
-        //         .send({
-        //             email: "halooo@mail.com",
-        //             password: "12345"
-        //         })
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Password cannot be empty")
+        }, 13000)
+        test("Email / Password yang diberikan invalid / tidak terdaftar", async () => {
+            const { status, body } = await request(app)
+                .post("/login")
+                .send({
+                    email: "halooo@mail.com",
+                    password: "12345"
+                })
 
-        //     expect(status).toBe(401)
-        //     expect(body).toHaveProperty("message", "Email or Password invalid")
-        // }, 13000)
-        // test("Email diberikan invalid / tidak terdaftar", async () => {
-        //     const { status, body } = await request(app)
-        //         .post("/login")
-        //         .send({
-        //             email: "halo@mail.com",
-        //             password: "123123"
-        //         })
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Email or Password invalid")
+        }, 13000)
+        test("Email diberikan invalid / tidak terdaftar", async () => {
+            const { status, body } = await request(app)
+                .post("/login")
+                .send({
+                    email: "halo@mail.com",
+                    password: "123123"
+                })
 
-        //     expect(status).toBe(401)
-        //     expect(body).toHaveProperty("message", "Email or Password invalid")
-        // }, 13000)
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Email or Password invalid")
+        }, 13000)
     })
 })
 
