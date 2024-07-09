@@ -29,7 +29,6 @@
 // setup middleware + error handler
 // kerja
 
-
 // How to run test :
 // asdasdasd npx sequelize-cli db:create --env test
 
@@ -43,3 +42,5 @@
 // npx sequelize-cli model:create --name Category --attributes name:string
 // npx sequelize-cli model:create --name Event --attributes name:string,imageUrl:string,location:geometry,CategoryId:integer,eventDate:Date,quantity:integer,isFree:boolean
 // npx sequelize-cli model:create --name Transaction --attributes OrderId:integer,amount:integer,status:string,UserId:integer,EventId:integer
+
+
