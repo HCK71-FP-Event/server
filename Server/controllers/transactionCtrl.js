@@ -1,7 +1,7 @@
 const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
 const { userCtrl } = require("./userCtrl");
-const { User } = require("../models/index");
+const { User, Transaction } = require("../models/index");
 
 class transactionCtrl {
   static async findAll(req, res, next) {
@@ -56,8 +56,14 @@ class transactionCtrl {
       const transaction = await snap.createTransaction(parameter);
       let transactionToken = transaction.token;
 
-      //III. Create order in DB
-      
+      //   III. Create order in DB
+      await Transaction.create({
+        OrderId: 0,
+        amount: 0,
+        status: "Paid",
+        UserId: req.user.id,
+        EventId: 1,
+      });
 
       res.json({ message: "Order created", transactionToken });
     } catch (error) {
