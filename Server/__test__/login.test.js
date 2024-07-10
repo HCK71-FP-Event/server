@@ -17,7 +17,6 @@ const userData = {
 
 }
 
-
 beforeAll(async () => {
     await queryInterface.bulkInsert("Users", [
         {
@@ -48,17 +47,17 @@ afterAll(async () => {
 
 describe("POST /login", () => {
     describe("Success", () => {
-        test("Berhasil login dan mengirimkan access_token", async () => {
+        test("Success login and get access_token", async () => {
             const { status, body } = await request(app)
                 .post("/login")
                 .send(userData)
 
             expect(status).toBe(200)
             expect(body).toHaveProperty("access_token", expect.any(String))
-        }, 13000)
+        },)
     })
     describe("Fail", () => {
-        test("Email tidak diberikan/ tidak diinput", async () => {
+        test("Email is empty ", async () => {
             const { status, body } = await request(app)
                 .post("/login")
                 .send({
@@ -70,19 +69,19 @@ describe("POST /login", () => {
             expect(body).toHaveProperty("message", "Email cannot be empty")
 
         }, 23000)
-        test("Password tidak diberikan/ tidak diinput", async () => {
+        test("Password is empty", async () => {
             const { status, body } = await request(app)
                 .post("/login")
                 .send({
                     email: "halo@mail.com",
-                    password:""
+                    password: ""
                 })
 
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
-        }, 13000)
-        test("Email / Password yang diberikan invalid / tidak terdaftar", async () => {
+        },)
+        test("Email is unrecognized", async () => {
             const { status, body } = await request(app)
                 .post("/login")
                 .send({
@@ -92,8 +91,8 @@ describe("POST /login", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Email or Password invalid")
-        }, 13000)
-        test("Email diberikan invalid / tidak terdaftar", async () => {
+        },)
+        test("Password is unrecognized", async () => {
             const { status, body } = await request(app)
                 .post("/login")
                 .send({
@@ -103,33 +102,6 @@ describe("POST /login", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Email or Password invalid")
-        }, 13000)
+        },)
     })
 })
-
-
-
-// beforeAll(async () => {
-
-//     await queryInterface.bulkInsert(
-//         "Users",
-//         [
-//             {
-//                 ...userData,
-//                 password: hashPassword(userData.password),
-//                 createdAt: new Date(),
-//                 updatedAt: new Date()
-//             }
-//         ],
-//         {}
-//     )
-
-// })
-
-// afterAll(async () => {
-//     await queryInterface.bulkDelete("Users", null, {
-//         truncate: true,
-//         cascade: true,
-//         restartIdentity: true
-//     })
-// })
