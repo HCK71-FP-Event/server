@@ -50,7 +50,7 @@ afterAll(async () => {
 })
 
 describe("POST /register", () => {
-    describe("Success", () => {
+    describe("Success ", () => {
         test("Berhasil register", async () => {
             const { status, body } = await request(app)
                 .post("/register")
@@ -62,7 +62,7 @@ describe("POST /register", () => {
         })
     })
     describe("Fail", () => {
-        test("Email tidak diberikan", async () => {
+        test("Email is empty", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -78,7 +78,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email cannot be empty")
         })
-        test("Email sudah terpakai", async () => {
+        test("Email is used", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -94,7 +94,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email already in use!")
         })
-        test("Email tidak input format email", async () => {
+        test("Please input Email Format", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -110,7 +110,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Input must be in email format")
         })
-        test("Password tidak di input", async () => {
+        test("Password is empty", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -126,7 +126,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
         })
-        test("Password kurang dari 5", async () => {
+        test("Password cannot below 5", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -141,7 +141,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password min length is 5")
         })
-        test("Fullname tidak boleh kosong", async () => {
+        test("Fullname is empty", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -155,7 +155,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Name cannot be empty")
         })
-        test("birthOfDate tidak boleh kosong", async () => {
+        test("birthOfDate is empty", async () => {
             const { status, body } = await request(app)
                 .post("/register")
                 .send({
@@ -169,7 +169,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Birth Date cannot be empty")
         })
-        test("phone Number tidak boleh kosong", async()=> {
+        test("phone Number is empty", async()=> {
             const {status, body} = await request(app)
             .post("/register")
             .send({
@@ -183,7 +183,7 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Phone number cannot be empty")
         })
-        test("address tidak boleh kosong", async()=> {
+        test("address is empty", async()=> {
             const {status, body} = await request(app)
             .post("/register")
             .send({
