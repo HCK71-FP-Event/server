@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             args: [5, 20],
             msg: "Password min length is 5",
           },
-        }
+        },
       },
       fullName: {
         type: DataTypes.STRING,
@@ -91,12 +91,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Address cannot be empty"
+            msg: "Address cannot be empty",
           },
           notNull: {
-            msg: "Address cannot be empty"
-          }
-        }
+            msg: "Address cannot be empty",
+          },
+        },
       },
       balance: DataTypes.INTEGER,
       avatar: DataTypes.STRING,

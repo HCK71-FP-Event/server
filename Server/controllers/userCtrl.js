@@ -5,15 +5,7 @@ const { createToken } = require("../helpers/jsonwebtoken");
 class userCtrl {
   static async register(req, res, next) {
     try {
-      const {
-        email,
-        password,
-        fullName,
-        birthOfDate,
-        phoneNumber,
-        address,
-        avatar,
-      } = req.body;
+      const { email, password, fullName, birthOfDate, phoneNumber, address, avatar } = req.body;
 
       if (!email) throw { name: "Email Empty" };
       if (!password) throw { name: "Password Empty" };
@@ -77,6 +69,7 @@ class userCtrl {
       next(error);
     }
   }
+
 }
 
 module.exports = { userCtrl };
