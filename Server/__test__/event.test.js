@@ -62,10 +62,36 @@ afterAll(async () => {
 
 describe("GET /event", () => {
     describe("Success", () => {
-        test("Success get all events", async () => {
+        test("Success get events", async () => {
             const { status, body } = await request(app)
                 .get("/event")
                 .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(200)
+            expect(body).toBeInstanceOf(Object)
+        })
+    })
+})
+
+describe("GET /allEvent", () => {
+    describe("Success", () => {
+        test("Success get allEvent", async () => {
+            const { status, body } = await request(app)
+            .get("/allEvent")
+            .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(200)
+            expect(body).toBeInstanceOf(Object)
+        })
+    })
+})
+
+describe("GET /allEvent/:id", ()=> {
+    describe("Success", ()=> {
+        test("Success get allEvent By Id params", async ()=> {
+            const{status, body} = await request(app)
+            .get("/allEvent/1")
+            .set("Authorization", `Bearer ${access_token}`)
 
             expect(status).toBe(200)
             expect(body).toBeInstanceOf(Object)
