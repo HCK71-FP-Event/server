@@ -18,8 +18,9 @@ router.get("/event", eventCtrl.findEventsByRadius);
 
 router.get("/categories", categoryCtrl.getCategory);
 
+router.get("/user/:id", userCtrl.findUserById);
+
 router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", transactionCtrl.findById);
-
 
 module.exports = router;
