@@ -22,9 +22,6 @@ const errHandler = (err, req, res, next) => {
     case "Password Empty":
       res.status(400).json({ message: "Password cannot be empty" });
       return;
-      case "Category Name Empty":
-        res.status(400).json({ message: "name cannot be empty" });
-        return;
     case "Invalid Login":
       res.status(401).json({ message: "Email or Password invalid" });
       return;
