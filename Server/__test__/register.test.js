@@ -61,98 +61,141 @@ describe("POST /register", () => {
             expect(body.message).toHaveProperty("email", userData2.email)
         })
     })
-    describe("Fail", ()=> {
-        test("Email tidak diberikan", async()=> {
+    describe("Fail", () => {
+        test("Email tidak diberikan", async () => {
             const { status, body } = await request(app)
-            .post("/register")
-            .send({
-                email: "",
-                password: "123456",
-                fullName: "halof2ull",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
-                address: "jalan jalan ha",
-                avatar: "example.jpg"
-            })
+                .post("/register")
+                .send({
+                    email: "",
+                    password: "123456",
+                    fullName: "halof2ull",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                    avatar: "example.jpg"
+                })
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email cannot be empty")
         })
-        test("Email sudah terpakai", async()=> {
-            const {status, body} = await request(app)
-            .post("/register")
-            .send({
-                email: "halo123@mail.com",
-                password: "123456",
-                fullName: "halof2ull",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
-                address: "jalan jalan ha",
-                avatar: "example.jpg"
-            })
+        test("Email sudah terpakai", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "halo123@mail.com",
+                    password: "123456",
+                    fullName: "halof2ull",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                    avatar: "example.jpg"
+                })
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email already in use!")
         })
-        test("Email tidak input format email", async()=> {
-            const {status, body} = await request(app)
-            .post("/register")
-            .send({
-                email: "halohalohalo",
-                password: "123456",
-                fullName: "halof2ull",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
-                address: "jalan jalan ha",
-                avatar: "example.jpg"
-            })
+        test("Email tidak input format email", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "halohalohalo",
+                    password: "123456",
+                    fullName: "halof2ull",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                    avatar: "example.jpg"
+                })
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Input must be in email format")
         })
-        test("Password tidak di input", async()=> {
-            const {status, body} = await request(app)
-            .post("/register")
-            .send({
-                email: "haloguys@mail.com",
-                password: "",
-                fullName: "halof2ull",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
-                address: "jalan jalan ha",
-                avatar: "example.jpg"
-            })
+        test("Password tidak di input", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "haloguys@mail.com",
+                    password: "",
+                    fullName: "halof2ull",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                    avatar: "example.jpg"
+                })
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
         })
-        test("Password kurang dari 5", async()=> {
-            const{status, body} = await request(app)
-            .post("/register")
-            .send({
-                email: "halo121@mail.com",
-                password: "1234",
-                fullName: "halof2ull",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
-                address: "jalan jalan ha",
-                avatar: "example.jpg"
-            })
+        test("Password kurang dari 5", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "halo121@mail.com",
+                    password: "1234",
+                    fullName: "halof2ull",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                    avatar: "example.jpg"
+                })
             expect(status).toBe(400)
-            expect(body).toHaveProperty("message", "Password min length is 5" )
+            expect(body).toHaveProperty("message", "Password min length is 5")
         })
-        test("Fullname tidak boleh kosong", async()=> {
-            const {status,body} = await request(app)
+        test("Fullname tidak boleh kosong", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "halo@mail.com",
+                    password: "123411",
+                    fullName: "",
+                    birthOfDate: "8 januari 1999",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "Name cannot be empty")
+        })
+        test("birthOfDate tidak boleh kosong", async () => {
+            const { status, body } = await request(app)
+                .post("/register")
+                .send({
+                    email: "halo@mail.com",
+                    password: "123411",
+                    fullName: "helohelo",
+                    birthOfDate: "",
+                    phoneNumber: "0191919191",
+                    address: "jalan jalan ha",
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "Birth Date cannot be empty")
+        })
+        test("phone Number tidak boleh kosong", async()=> {
+            const {status, body} = await request(app)
             .post("/register")
             .send({
                 email: "halo@mail.com",
                 password: "123411",
-                fullName: "",
-                birthOfDate: "8 januari 1999",
-                phoneNumber: "0191919191",
+                fullName: "helohelo",
+                birthOfDate: "9 desermber 1999",
+                phoneNumber: "",
                 address: "jalan jalan ha",
             })
             expect(status).toBe(400)
-            expect(body).toHaveProperty("message", "Name cannot be empty" )        })
+            expect(body).toHaveProperty("message", "Phone number cannot be empty")
+        })
+        test("address tidak boleh kosong", async()=> {
+            const {status, body} = await request(app)
+            .post("/register")
+            .send({
+                email: "halo@mail.com",
+                password: "123411",
+                fullName: "helohelo",
+                birthOfDate: "9 desermber 1999",
+                phoneNumber: "08181818",
+                address: "",
+            })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "Address cannot be empty")
+        })
     })
 })

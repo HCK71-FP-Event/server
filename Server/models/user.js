@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(async (user, options) => {
     user.role = "Staff";
     user.balance = 0;
-    // user.password = hashPassword(user.password);
+    user.password = hashPassword(user.password);
 
     if (!user.avatar) {
       user.avatar = "";
