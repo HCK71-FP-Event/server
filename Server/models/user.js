@@ -37,16 +37,18 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        notEmpty: {
-          msg: "Password cannot be empty",
-        },
-        notNull: {
-          msg: "Password cannot be empty",
-        },
-        len: {
-          args: [5, 20],
-          msg: "Password min length is 5",
-        },
+        validate: {
+          notEmpty: {
+            msg: "Password cannot be empty",
+          },
+          notNull: {
+            msg: "Password cannot be empty",
+          },
+          len: {
+            args: [5, 20],
+            msg: "Password min length is 5",
+          },
+        }
       },
       fullName: {
         type: DataTypes.STRING,
@@ -109,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(async (user, options) => {
     user.role = "Staff";
     user.balance = 0;
-    user.password = hashPassword(user.password);
+    // user.password = hashPassword(user.password);
 
     if (!user.avatar) {
       user.avatar = "";

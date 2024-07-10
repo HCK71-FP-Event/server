@@ -126,5 +126,33 @@ describe("POST /register", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
         })
+        test("Password kurang dari 5", async()=> {
+            const{status, body} = await request(app)
+            .post("/register")
+            .send({
+                email: "halo121@mail.com",
+                password: "1234",
+                fullName: "halof2ull",
+                birthOfDate: "8 januari 1999",
+                phoneNumber: "0191919191",
+                address: "jalan jalan ha",
+                avatar: "example.jpg"
+            })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "Password min length is 5" )
+        })
+        test("Fullname tidak boleh kosong", async()=> {
+            const {status,body} = await request(app)
+            .post("/register")
+            .send({
+                email: "halo@mail.com",
+                password: "123411",
+                fullName: "",
+                birthOfDate: "8 januari 1999",
+                phoneNumber: "0191919191",
+                address: "jalan jalan ha",
+            })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "Name cannot be empty" )        })
     })
 })

@@ -21,9 +21,6 @@ const errHandler = (err, req, res, next) => {
     case "address Empty":
       res.status(400).json({ message: "Address cannot be empty" });
       return;
-    case "avatar Empty":
-      res.status(400).json({ message: "Avatar cannot be empty" });
-      return;
     case "Password Empty":
       res.status(400).json({ message: "Password cannot be empty" });
       return;

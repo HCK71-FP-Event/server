@@ -21,7 +21,6 @@ class userCtrl {
       if (!birthOfDate) throw { name: "birthOfDate Empty" };
       if (!phoneNumber) throw { name: "phoneNumber Empty" };
       if (!address) throw { name: "address Empty" };
-      if (!avatar) throw { name: "avatar Empty" };
 
       let user = await User.create({
         email,
