@@ -1,6 +1,6 @@
 [
     {
-      "name": "Event A",
+      "name": "DWP",
       "imageUrl": "https://example.com/imageA.jpg",
       "location": {
         "type": "Point",
@@ -12,7 +12,8 @@
       "CategoryId": 1,
       "eventDate": "2024-08-01T08:00:00Z",
       "quantity": 100,
-      "isFree": true
+      "isFree": true,
+      "price": 2000000
     },
     {
       "name": "Event B",
@@ -27,7 +28,8 @@
       "CategoryId": 2,
       "eventDate": "2024-08-15T10:00:00Z",
       "quantity": 150,
-      "isFree": false
+      "isFree": false,
+      "price": 2000020
     },
     {
       "name": "Event C",
@@ -42,7 +44,8 @@
       "CategoryId": 3,
       "eventDate": "2024-09-01T12:00:00Z",
       "quantity": 200,
-      "isFree": true
+      "isFree": true,
+      "price": 300000
     }
   ]
   
