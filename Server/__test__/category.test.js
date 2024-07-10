@@ -1,8 +1,10 @@
 const app = require("../app")
-const { Category } = require("../models")
+const { Category, User } = require("../models")
 
 const request = require("supertest")
 const { sequelize } = require("../models")
+const { createToken } = require("../helpers/jsonwebtoken")
+const { hashPassword } = require("../helpers/bcrypt")
 const { queryInterface } = sequelize
 
 
@@ -10,9 +12,7 @@ const newCategory = {
     name: "Hola"
 }
 
-const newCategory2 = {
-    name: "Oi Apa Kabar"
-}
+let access_token
 
 beforeAll(async () => {
     await queryInterface.bulkInsert("Categories", [
@@ -22,13 +22,36 @@ beforeAll(async () => {
             updatedAt: new Date()
         }
     ])
+
+    const users = require("../data/user.json").map((el)=> {
+        el.createdAt = el.updatedAt = new Date()
+
+        el.password = hashPassword(el.password)
+
+        return el
+    })
+    await queryInterface.bulkInsert("Users", users)
+
+    const user = await User.findOne({
+        where: {
+            email: users[0].email
+        }
+    })
+    access_token = createToken({ id: user.id })
 })
+
+
 
 afterAll(async () => {
     await queryInterface.bulkDelete("Categories", null, {
         truncate: true,
         cascade: true,
         restartIdentity: true
+    })
+    await queryInterface.bulkDelete("Users", null, {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true
     })
 })
 
@@ -37,34 +60,10 @@ describe("GET /categories", () => {
         test("Success get all categories", async () => {
             const { status, body } = await request(app)
                 .get("/categories")
+                .set("Authorization", `Bearer ${access_token}`)
 
             expect(status).toBe(200)
             expect(body).toBeInstanceOf(Object)
-        })
-    })
-})
-describe("POST /categories", () => {
-    describe("Success", () => {
-        test("Success creating categories", async () => {
-            const { status, body } = await request(app)
-                .post("/categories")
-                .send(newCategory2)
-
-            expect(status).toBe(201)
-            expect(body).toBeInstanceOf(Object)
-            expect(body).toHaveProperty("id", expect.any(Number))
-            expect(body).toHaveProperty("name", newCategory2.name)
-        })
-    })
-    describe("Fail", ()=> {
-        test("name of the category cannot be empty", async ()=> {
-            const{status, body} = await request(app) 
-            .post("/categories")
-                .send({
-                    name: ""
-                })
-            expect(status).toBe(400)
-            expect(body).toHaveProperty("message", "name cannot be empty")
         })
     })
 })

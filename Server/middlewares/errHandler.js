@@ -4,9 +4,6 @@ const errHandler = (err, req, res, next) => {
     case "SequelizeUniqueConstraintError":
       res.status(400).json({ message: err.errors[0].message });
       return;
-    case "File Required":
-      res.status(400).json({ message: err.message });
-      return
     case "Email Empty":
       res.status(400).json({ message: "Email cannot be empty" });
       return;
