@@ -8,7 +8,10 @@ const { categoryCtrl } = require("../controllers/categoryCtrl");
 
 router.post("/register", userCtrl.register);
 router.post("/login", userCtrl.login);
+
 router.get("/event", eventCtrl.findEventsByRadius);
+
 router.get("/categories", categoryCtrl.getCategory)
+router.post("/categories", categoryCtrl.postCategory)
 
 module.exports = router;
