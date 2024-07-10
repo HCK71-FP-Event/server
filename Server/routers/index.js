@@ -24,6 +24,6 @@ router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", transactionCtrl.findById);
 //midtrans
 //I. Initiate Order
-router.get('/payment/midtrans/initiate', transactionCtrl.initiateMidtransTrx)
+router.get("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);
 
 module.exports = router;
