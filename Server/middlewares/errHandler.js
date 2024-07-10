@@ -23,6 +23,9 @@ const errHandler = (err, req, res, next) => {
     case "Password Empty":
       res.status(400).json({ message: "Password cannot be empty" });
       return;
+    case "outOfStock":
+      res.status(404).json({ message: "Ticket out of stock" });
+      return;
     case "Invalid Login":
       res.status(401).json({ message: "Email or Password invalid" });
       return;

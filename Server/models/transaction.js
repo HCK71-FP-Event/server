@@ -20,7 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.STRING,
       UserId: DataTypes.INTEGER,
       EventId: DataTypes.INTEGER,
-      quantity: DataTypes.INTEGER,
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Quantity cannot be 0'
+          },
+          notNull: {
+            msg: "Quantity cannot be 0"
+          }
+        }
+      },
     },
     {
       sequelize,
