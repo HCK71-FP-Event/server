@@ -28,6 +28,9 @@ const errHandler = (err, req, res, next) => {
     case "Invalid Token":
       res.status(401).json({ message: "Invalid token" });
       return;
+    case "notFound":
+      res.status(404).json({ message: "Event Not Found" });
+      return;
     case "Unauthorized":
     case "JsonWebTokenError":
       res.status(401).json({ message: "Invalid token" });
