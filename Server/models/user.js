@@ -37,26 +37,28 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        notEmpty: {
-          msg: "Password cannot be empty",
-        },
-        notNull: {
-          msg: "Password cannot be empty",
-        },
-        len: {
-          args: [5, 20],
-          msg: "Password min length is 5",
-        },
+        validate: {
+          notEmpty: {
+            msg: "Password cannot be empty",
+          },
+          notNull: {
+            msg: "Password cannot be empty",
+          },
+          len: {
+            args: [5, 20],
+            msg: "Password min length is 5",
+          },
+        }
       },
       fullName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "fullName cannot be empty",
+            msg: "Name cannot be empty",
           },
           notNull: {
-            msg: "fullName cannot be empty",
+            msg: "Name cannot be empty",
           },
         },
       },
@@ -65,10 +67,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "birthOfDate cannot be empty",
+            msg: "Birth Date cannot be empty",
           },
           notNull: {
-            msg: "birthOfDate cannot be empty",
+            msg: "Birth Date cannot be empty",
           },
         },
       },
@@ -77,10 +79,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "phoneNumber cannot be empty",
+            msg: "Phone number cannot be empty",
           },
           notNull: {
-            msg: "phoneNumber cannot be empty",
+            msg: "Phone number cannot be empty",
           },
         },
       },
@@ -89,10 +91,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "address cannot be empty"
+            msg: "Address cannot be empty"
           },
           notNull: {
-            msg: "address cannot be empty"
+            msg: "Address cannot be empty"
           }
         }
       },
