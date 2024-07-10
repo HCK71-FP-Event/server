@@ -40,7 +40,6 @@ class userCtrl {
       });
     } catch (error) {
       next(error);
-      console.log(error);
     }
   }
 
@@ -61,7 +60,6 @@ class userCtrl {
       res.status(200).json({ access_token: token });
     } catch (error) {
       next(error);
-      console.log(error);
     }
   }
 }

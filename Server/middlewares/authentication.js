@@ -17,7 +17,8 @@ const authentication = async (req, res, next) => {
         if (!user) throw { name: "Invalid Token" }
 
         req.user = {
-            id: user.id, role: user.role
+            id: user.id, 
+            role: user.role
         }
         next()
     } catch (error) {
