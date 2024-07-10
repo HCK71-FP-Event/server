@@ -1,5 +1,5 @@
 const app = require("../app")
-const { Category, User } = require("../models")
+const { User } = require("../models")
 
 const request = require("supertest")
 const { sequelize } = require("../models")
@@ -64,6 +64,15 @@ describe("GET /categories", () => {
 
             expect(status).toBe(200)
             expect(body).toBeInstanceOf(Object)
+        })
+    })
+    describe("Fail", ()=>{
+        test("Fail get all categories because no access_token", async()=> {
+            const {status, body} = await request(app)
+            .get("/categories")
+            
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
         })
     })
 })
