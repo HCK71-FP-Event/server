@@ -2,6 +2,7 @@ const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
 const { userCtrl } = require("./userCtrl");
 const { User } = require("../models/index");
+const { Transaction } = require("sequelize");
 
 class transactionCtrl {
   static async findAll(req, res, next) {
@@ -36,7 +37,7 @@ class transactionCtrl {
         //data detail order
         transaction_details: {
           order_id: `TRX_ID_${uuidv4()}`,
-          gross_amount: 10_000,
+          gross_amount: amount,
         },
         //data jenis pembayaran
         credit_card: {
@@ -57,7 +58,13 @@ class transactionCtrl {
       let transactionToken = transaction.token;
 
       //III. Create order in DB
-      
+      //   await Transaction.create({
+      //     OrderId: 0,
+      //     amount: 0,
+      //     status: "Paid",
+      //     UserId: req.user.id,
+      //     EvenvtId: 1
+      //   })
 
       res.json({ message: "Order created", transactionToken });
     } catch (error) {
