@@ -7,25 +7,25 @@ const errHandler = (err, req, res, next) => {
     case "File Required":
       res.status(400).json({ message: err.message });
     case "Email Empty":
-      res.status(401).json({ message: "Email cannot be empty" });
+      res.status(400).json({ message: "Email cannot be empty" });
       return;
     case "fullName Empty":
-      res.status(401).json({ message: "Name cannot be empty" });
+      res.status(400).json({ message: "Name cannot be empty" });
       return;
     case "birthOfDate Empty":
-      res.status(401).json({ message: "Birth Date cannot be empty" });
+      res.status(400).json({ message: "Birth Date cannot be empty" });
       return;
     case "phoneNumber Empty":
-      res.status(401).json({ message: "Phone number cannot be empty" });
+      res.status(400).json({ message: "Phone number cannot be empty" });
       return;
     case "address Empty":
-      res.status(401).json({ message: "Address cannot be empty" });
+      res.status(400).json({ message: "Address cannot be empty" });
       return;
     case "avatar Empty":
-      res.status(401).json({ message: "Avatar cannot be empty" });
+      res.status(400).json({ message: "Avatar cannot be empty" });
       return;
     case "Password Empty":
-      res.status(401).json({ message: "Password cannot be empty" });
+      res.status(400).json({ message: "Password cannot be empty" });
       return;
     case "Invalid Login":
       res.status(401).json({ message: "Email or Password invalid" });

@@ -82,7 +82,7 @@ describe("POST /login", () => {
                     password: "12345"
                 })
 
-            expect(status).toBe(401)
+            expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email cannot be empty")
 
         }, 23000)
@@ -95,7 +95,7 @@ describe("POST /login", () => {
                 })
 
 
-            expect(status).toBe(401)
+            expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
         }, 13000)
         test("Email / Password yang diberikan invalid / tidak terdaftar", async () => {
