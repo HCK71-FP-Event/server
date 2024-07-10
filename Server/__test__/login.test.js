@@ -44,23 +44,7 @@ afterAll(async () => {
     })
 })
 
-// const failLogin1 = {
-//     password: "123456"
-// }
 
-// const failLogin2 = {
-//     email: "halo@mail.com"
-// }
-
-// const failLogin3 = {
-//     email: "halo@mail.com",
-//     password: "aadaaa"
-// }
-
-// const failLogin4 = {
-//     email: "halooo@mail.com",
-//     password: "12345"
-// }
 
 describe("POST /login", () => {
     describe("Success", () => {
