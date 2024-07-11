@@ -19,11 +19,15 @@ router.get("/event", eventCtrl.findEventsByRadius);
 router.get("/categories", categoryCtrl.getCategory);
 
 router.get("/user/:id", userCtrl.findUserById);
+router.get("/currentUser", userCtrl.findLoginUser);
 
 router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", transactionCtrl.findById);
 //midtrans
 //I. Initiate Order
-router.get("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);
+router.get(
+  "/payment/midtrans/initiate/:eventId",
+  transactionCtrl.initiateMidtransTrx
+);
 
 module.exports = router;

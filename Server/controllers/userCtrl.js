@@ -5,7 +5,15 @@ const { createToken } = require("../helpers/jsonwebtoken");
 class userCtrl {
   static async register(req, res, next) {
     try {
-      const { email, password, fullName, birthOfDate, phoneNumber, address, avatar } = req.body;
+      const {
+        email,
+        password,
+        fullName,
+        birthOfDate,
+        phoneNumber,
+        address,
+        avatar,
+      } = req.body;
 
       if (!email) throw { name: "Email Empty" };
       if (!password) throw { name: "Password Empty" };
@@ -70,6 +78,23 @@ class userCtrl {
     }
   }
 
+  static async findLoginUser(req, res, next) {
+    try {
+      let loginUser = await User.findByPk(req.user.id, {
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+
+      if (!loginUser) {
+        throw { name: "notFound" };
+      } else {
+        res.status(200).json({ loginUser });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = { userCtrl };
