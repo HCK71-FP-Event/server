@@ -5,7 +5,15 @@ const { User, Transaction, Event } = require("../models/index");
 class transactionCtrl {
   static async findAll(req, res, next) {
     try {
-      res.status(200).json({ message: "Find all transactions" });
+      let result = await Transaction.findAll({
+        include: {
+          model: User,
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+      });
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -13,7 +21,18 @@ class transactionCtrl {
 
   static async findById(req, res, next) {
     try {
-      res.status(200).json({ message: "Find transaction by id" });
+      let { id } = req.params;
+      let result = await Transaction.findByPk(id, {
+        include: [
+          {
+            model: User,
+            attributes: {
+              exclude: ["password"],
+            },
+          },
+        ],
+      });
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }
