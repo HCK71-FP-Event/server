@@ -105,6 +105,14 @@ class transactionCtrl {
       next(error);
     }
   }
+
+  static async updatePaymentStatus(req, res, next) {
+    try {
+      
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = { transactionCtrl };
