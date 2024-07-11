@@ -29,5 +29,6 @@ router.get(
   "/payment/midtrans/initiate/:eventId",
   transactionCtrl.initiateMidtransTrx
 );
+router.patch("/payment/midtrans/success/rooms/:id", transactionCtrl.updatePaymentStatus);
 
 module.exports = router;
