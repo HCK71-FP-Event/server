@@ -38,7 +38,7 @@
 // run this command npx jest --detectOpenHandles --forceExit --verbose
 
 
-// npx sequelize-cli model:create --name User --attributes email:string,password:string,fullName:string,birthOfDate:string,phoneNumber:string,address:string,balance:integer,avatar:string,role:string
+// npx sequelize-cli model:create --name User --attributes email:string,password:string,fullName:string,birthOfDate:string,phoneNumber:string,address:string,avatar:string,role:string
 // npx sequelize-cli model:create --name Category --attributes name:string
 // npx sequelize-cli model:create --name Event --attributes name:string,imageUrl:string,location:geometry,CategoryId:integer,eventDate:Date,quantity:integer,isFree:boolean,price:integer
 // npx sequelize-cli model:create --name Transaction --attributes OrderId:integer,,quantity:integer,amount:integer,status:string,UserId:integer,EventId:integer
