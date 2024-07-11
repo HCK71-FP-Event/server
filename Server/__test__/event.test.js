@@ -79,7 +79,7 @@ afterAll(async () => {
 
 describe("GET /event", () => {
     describe("Success", () => {
-        test("Success get events", async () => {
+        test.only("Success get events", async () => {
             const { status, body } = await request(app)
                 .get("/event")
                 .set("Authorization", `Bearer ${access_token}`);
@@ -89,7 +89,7 @@ describe("GET /event", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get events, no access_token", async ()=> {
+        test.only("Fail get events, no access_token", async ()=> {
             const {status, body} = await request(app)
             .get("/event")
 
@@ -101,7 +101,7 @@ describe("GET /event", () => {
 
 describe("GET /allEvent", () => {
     describe("Success", () => {
-        test("Success get allEvent", async () => {
+        test.only("Success get allEvent", async () => {
             const { status, body } = await request(app)
                 .get("/allEvent")
                 .set("Authorization", `Bearer ${access_token}`);
@@ -111,7 +111,7 @@ describe("GET /allEvent", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get allEvents, no access_token", async ()=> {
+        test.only("Fail get allEvents, no access_token", async ()=> {
             const {status, body} = await request(app)
             .get("/allEvent")
 
@@ -124,7 +124,7 @@ describe("GET /allEvent", () => {
 
 describe("GET /allEvent/:id", () => {
     describe("Success", () => {
-        test("Success get allEvent By Id params", async () => {
+        test.only("Success get allEvent By Id params", async () => {
             const event = await Event.findOne();
             const { status, body } = await request(app)
                 .get(`/allEvent/${event.id}`)
@@ -135,13 +135,21 @@ describe("GET /allEvent/:id", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get allEvent by id , no access_token", async ()=> {
+        test.only("Fail get allEvent by id , no access_token", async ()=> {
             const event = await Event.findOne()
             const {status, body} = await request(app)
             .get(`/allEvent/${event.id}`)
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test.only("Fail get allEvent by id is not found", async ()=> {
+            const {status, body} = await request(app)
+            .get(`/allEvent/1231231`)
+            .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
         })
     })
 });
