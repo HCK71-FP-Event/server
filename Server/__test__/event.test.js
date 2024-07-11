@@ -3,14 +3,17 @@ const { User, Event, sequelize } = require("../models");
 const request = require("supertest");
 const { createToken } = require("../helpers/jsonwebtoken");
 const { hashPassword } = require("../helpers/bcrypt");
-const { queryInterface } = sequelize;
+const { queryInterface, Sequelize } = sequelize;
 
 const newEvent = {
     name: "Event A",
     imageUrl: "https://example.com/imageA.jpg",
     location: {
         type: "Point",
-        coordinates: [106.7827090935093, -6.26326708553454]
+        coordinates: {
+            long: 106.7827090935093,
+            lat: -6.26326708553454
+          }
     },
     CategoryId: 1,
     eventDate: "2024-07-08",
@@ -27,10 +30,10 @@ beforeAll(async () => {
             {
                 name: newEvent.name,
                 imageUrl: newEvent.imageUrl,
-                location: {
-                    type: "Point",
-                    coordinates: Sequelize.fn('ST_GeomFromText', `POINT(${newEvent.location.coordinates[0]} ${newEvent.location.coordinates[1]})`)
-                },
+                location: Sequelize.fn(
+                    "ST_GeomFromText",
+                    `POINT(${newEvent.location.coordinates.long} ${newEvent.location.coordinates.lat})`
+                ),
                 CategoryId: newEvent.CategoryId,
                 eventDate: newEvent.eventDate,
                 quantity: newEvent.quantity,
@@ -82,9 +85,18 @@ describe("GET /event", () => {
                 .set("Authorization", `Bearer ${access_token}`);
 
             expect(status).toBe(200);
-            expect(body).toBeInstanceOf(Array);
+            expect(body).toBeInstanceOf(Object);
         });
     });
+    describe("Fail", () => {
+        test("Fail get events, no access_token", async ()=> {
+            const {status, body} = await request(app)
+            .get("/event")
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+    })
 });
 
 describe("GET /allEvent", () => {
@@ -95,9 +107,19 @@ describe("GET /allEvent", () => {
                 .set("Authorization", `Bearer ${access_token}`);
 
             expect(status).toBe(200);
-            expect(body).toBeInstanceOf(Array);
+            expect(body).toBeInstanceOf(Object);
         });
     });
+    describe("Fail", () => {
+        test("Fail get allEvents, no access_token", async ()=> {
+            const {status, body} = await request(app)
+            .get("/allEvent")
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+    })
+    
 });
 
 describe("GET /allEvent/:id", () => {
@@ -112,4 +134,14 @@ describe("GET /allEvent/:id", () => {
             expect(body).toBeInstanceOf(Object);
         });
     });
+    describe("Fail", () => {
+        test("Fail get allEvent by id , no access_token", async ()=> {
+            const event = await Event.findOne()
+            const {status, body} = await request(app)
+            .get(`/allEvent/${event.id}`)
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+    })
 });
