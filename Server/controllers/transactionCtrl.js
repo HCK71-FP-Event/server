@@ -100,7 +100,7 @@ class transactionCtrl {
         //transactionToken boleh disimpen (opsional), supaya ketika pembayaran pending, token bisa dikirim kembali ke user
       });
 
-      res.json({ message: "Order created", transactionToken });
+      res.json({ message: "Order created", token: transactionToken, redirect_url: transaction.redirect_url });
     } catch (error) {
       next(error);
     }
@@ -145,7 +145,7 @@ class transactionCtrl {
       });
       if (response.data.transaction_status === "capture" && response.data.status_code === "200") {
         //kurangin quantity tiket event ...
-        await transaction.update({ paid: true });
+        await transaction.update({ status: "Paid" });
       }
     } catch (error) {
       next(error);
@@ -153,8 +153,30 @@ class transactionCtrl {
   }
 
   static async paymentNotification(req, res) {
-    console.log(req.body);
-    res.status(200).json({ message: "tes" });
+    // console.log(req.body);
+    const { transaction_status } = req.body;
+    const { status_code } = req.body;
+    const { order_id } = req.body;
+
+    const transaction = await Transaction.findOne({
+      order_id,
+    });
+    if (!transaction) {
+      throw { name: "notFound" };
+    }
+    const quantityTicket = transaction.quantity;
+
+    const event = await Event.findOne({
+      id: transaction.EventId,
+    });
+    const quantityTicketEvent = event.quantity;
+
+    if (transaction_status === "capture" && status_code === "200") {
+      await transaction.update({ status: "Paid" });
+      let quantityUpdated = quantityTicketEvent - quantityTicket;
+      await event.update({ quantity: quantityUpdated });
+    }
+    res.status(200).json({ message: `${transaction.OrderId}transaction paid` });
   }
 }
 
