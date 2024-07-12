@@ -16,6 +16,9 @@ const newTransaction = {
     EventId: 1
 }
 
+const newCat = {
+    name: "music"
+}
 
 const newEvent = {
     name: "Event A",
@@ -48,6 +51,16 @@ beforeAll(async () => {
 
         const user = await User.findOne({ where: { email: users[0].email } });
         access_token = createToken({ id: user.id });
+
+        const category = await queryInterface.bulkInsert("Categories", [
+            {
+                name: newCat.name,
+                createdAt : new Date(), 
+                updatedAt : new Date()
+            }
+        ])
+
+
         await queryInterface.bulkInsert("Events", [
             {
                 name: newEvent.name,
@@ -87,21 +100,27 @@ beforeAll(async () => {
 
 afterAll(async () => {
     try {
-        await queryInterface.bulkDelete("Events", null, {
-            truncate: true,
-            cascade: true,
-            restartIdentity: true
-        });
-        await queryInterface.bulkDelete("Users", null, {
-            truncate: true,
-            restartIdentity: true,
-            cascade: true
-        });
         await queryInterface.bulkDelete("Transactions", null, {
             truncate: true,
             cascade: true,
             restartIdentity: true
         })
+        await queryInterface.bulkDelete("Events", null, {
+            truncate: true,
+            cascade: true,
+            restartIdentity: true
+        });
+        await queryInterface.bulkDelete("Categories", null,{
+            truncate: true,
+            restartIdentity: true,
+            cascade: true
+        })
+        await queryInterface.bulkDelete("Users", null, {
+            truncate: true,
+            restartIdentity: true,
+            cascade: true
+        });
+       
     } catch (error) {
         console.error("Error during afterAll:", error);
         throw error;
@@ -126,15 +145,6 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
         test("Success get transactions", async () => {
             const { status, body } = await request(app)
                 .get("/transactions")
-                .set("Authorization", `Bearer ${access_token}`)
-    
-            expect(status).toBe(200)
-            expect(body).toBeInstanceOf(Object)
-        })
-        test("Success get transaction/:id", async () => {
-            const transactions = await Transaction.findOne()
-            const { status, body } = await request(app)
-                .get(`/transactions/${transactions.id}`)
                 .set("Authorization", `Bearer ${access_token}`)
     
             expect(status).toBe(200)

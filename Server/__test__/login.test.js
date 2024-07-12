@@ -32,7 +32,6 @@ beforeAll(async () => {
             updatedAt: new Date()
         }
     ])
-
 })
 
 afterAll(async () => {
@@ -68,7 +67,7 @@ describe("POST /login", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Email cannot be empty")
 
-        }, 23000)
+        })
         test("Password is empty", async () => {
             const { status, body } = await request(app)
                 .post("/login")
@@ -77,10 +76,9 @@ describe("POST /login", () => {
                     password: ""
                 })
 
-
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "Password cannot be empty")
-        },)
+        })
         test("Email is unrecognized", async () => {
             const { status, body } = await request(app)
                 .post("/login")
@@ -91,7 +89,7 @@ describe("POST /login", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Email or Password invalid")
-        },)
+        })
         test("Password is unrecognized", async () => {
             const { status, body } = await request(app)
                 .post("/login")
@@ -102,6 +100,6 @@ describe("POST /login", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Email or Password invalid")
-        },)
+        })
     })
 })
