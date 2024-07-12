@@ -45,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {},
       },
       CategoryId: DataTypes.INTEGER,
+      allowNull:false,
       eventDate: {
         type: DataTypes.DATE,
         allowNull: false,
