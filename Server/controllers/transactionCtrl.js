@@ -67,7 +67,7 @@ class transactionCtrl {
       let parameter = {
         //data detail order
         transaction_details: {
-          order_id: `TRX_ID_${uuidv4()}`,
+          order_id: uuidv4(),
           gross_amount: quantity * event.price,
         },
         //data jenis pembayaran
@@ -108,10 +108,53 @@ class transactionCtrl {
 
   static async updatePaymentStatus(req, res, next) {
     try {
-      
+      const { eventId } = req.params;
+      const { OrderId } = req.body;
+      console.log(OrderId);
+      console.log(eventId);
+
+      //transaction checker
+      const transaction = await Transaction.findOne({
+        where: {
+          OrderId,
+        },
+      });
+      if (!transaction) {
+        throw { name: "notFound" };
+      }
+
+      const event = await Event.findOne({
+        where: {
+          id: eventId,
+        },
+      });
+      if (!event) {
+        throw { name: "notFound" };
+      }
+
+      // const serverKey = process.env.MIDTRANS_SERVER_KEY;
+      const serverKey = "SB-Mid-server-FHY9yP5924-6a69eM5AT0rHB";
+      const base64ServerKey = Buffer.from(serverKey + ":").toString("base64");
+
+      // console.log(transaction);
+
+      const response = await axios.get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
+        headers: {
+          Authorization: `Basic ${base64ServerKey}`,
+        },
+      });
+      if (response.data.transaction_status === "capture" && response.data.status_code === "200") {
+        //kurangin quantity tiket event ...
+        await transaction.update({ paid: true });
+      }
     } catch (error) {
-      next(error)
+      next(error);
     }
+  }
+
+  static async paymentNotification(req, res) {
+    console.log(req.body);
+    res.status(200).json({ message: "tes" });
   }
 }
 
