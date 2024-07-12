@@ -17,7 +17,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   Transaction.init({
     OrderId: DataTypes.STRING,
-    quantity: DataTypes.INTEGER,
+    quantity: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate: {
+        notEmpty: {
+          msg: "quantity cannot be empty"
+        },
+        notNull: {
+          msg: "quantity cannot be empty"
+        }
+      }
+    },
     amount: DataTypes.INTEGER,
     status: DataTypes.STRING,
     UserId: DataTypes.INTEGER,
