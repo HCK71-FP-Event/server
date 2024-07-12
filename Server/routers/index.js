@@ -27,7 +27,7 @@ router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", transactionCtrl.findById);
 //midtrans
 //I. Initiate Order
-router.get("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);
+router.post("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx); // harusnya post
 //II. Update payment status
 router.patch("/payment/midtrans/success/event/:eventId", transactionCtrl.updatePaymentStatus);
 

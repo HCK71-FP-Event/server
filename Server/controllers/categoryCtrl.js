@@ -7,7 +7,7 @@ class categoryCtrl {
 
       res.status(200).json(categories);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       next(error);
     }
   }
