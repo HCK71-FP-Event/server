@@ -13,7 +13,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       quantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       amount: {
         type: Sequelize.INTEGER
