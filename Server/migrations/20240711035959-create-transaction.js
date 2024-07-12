@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       OrderId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+       
       },
       quantity: {
         type: Sequelize.INTEGER,
@@ -23,10 +24,18 @@ module.exports = {
         type: Sequelize.STRING
       },
       UserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id"
+        }
       },
       EventId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Events",
+          key: "id"
+        }
       },
       createdAt: {
         allowNull: false,
