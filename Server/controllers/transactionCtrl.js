@@ -12,6 +12,9 @@ class transactionCtrl {
             exclude: ["password"],
           },
         },
+        where: {
+          UserId: req.user.id,
+        },
       });
       res.status(200).json(result);
     } catch (error) {
@@ -19,7 +22,7 @@ class transactionCtrl {
     }
   }
 
-  static async findById(req, res, next) {
+  /* static async findById(req, res, next) {
     try {
       let { id } = req.params;
       let result = await Transaction.findByPk(id, {
@@ -36,8 +39,57 @@ class transactionCtrl {
     } catch (error) {
       next(error);
     }
+  } */
+
+  //menerima eventId dari params dan quantity ticket dari req.body
+  static async freeEvent(req, res, next) {
+    try {
+      const { eventId } = req.params;
+      const { quantity } = req.body;
+      const event = await Event.findByPk(eventId);
+      const user = await User.findOne({
+        id: event.UserId,
+      });
+
+      //check event is available
+      if (!event) {
+        throw { name: "notFound" };
+      }
+
+      //check event ticket is available
+      if (quantity > event.quantity) {
+        throw { name: "outOfStock" };
+      }
+
+      await Transaction.create({
+        OrderId: `FREE-${uuidv4()}`,
+        quantity: quantity,
+        amount: 0,
+        status: "Paid",
+        UserId: req.user.id,
+        EventId: eventId,
+      });
+
+      let quantityUpdated = event.quantity - quantity;
+
+      await event.update({
+        quantity: quantityUpdated,
+      });
+      res.status(201).json({
+        message: `Order created!`,
+        detailOrder: {
+          fullName: user.fullName,
+          // eventDate: String(event.eventDate).slice(0, 10),
+          eventDate: String(event.eventDate),
+          quantity: quantity,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
+  //menerima eventId dari params dan quantity ticket dari req.body
   static async initiateMidtransTrx(req, res, next) {
     try {
       let { eventId } = req.params;
@@ -45,7 +97,6 @@ class transactionCtrl {
 
       let event = await Event.findByPk(eventId);
       let user = await User.findByPk(req.user.id);
-      // console.log(quantity, event.quantity);
 
       //event availability checker
       if (!event) {
@@ -78,10 +129,10 @@ class transactionCtrl {
         },
         //data detail customer
         customer_details: {
-          fullName: user.fullName,
+          first_name: user.fullName,
           email: user.email,
           phone: user.phoneNumber,
-          address: user.address,
+          billing_address: { address: user.address },
           age: new Date().getFullYear() - Number(user.birthOfDate.slice(6, 10)),
         },
       };
@@ -90,7 +141,6 @@ class transactionCtrl {
 
       //II. Create transaction to midtrans
       const transaction = await snap.createTransaction(parameter);
-      // console.log(transaction);
       let transactionToken = transaction.token;
 
       //   III. Create order in DB
@@ -110,48 +160,51 @@ class transactionCtrl {
     }
   }
 
-  static async updatePaymentStatus(req, res, next) {
-    try {
-      const { eventId } = req.params;
-      const { OrderId } = req.body;
-      //transaction checker
-      const transaction = await Transaction.findOne({
-        where: {
-          OrderId,
-        },
-      });
-      if (!transaction) {
-        throw { name: "notFound" };
-      }
+  // static async updatePaymentStatus(req, res, next) {
+  //   try {
+  //     const { eventId } = req.params;
+  //     const { OrderId } = req.body;
+  //     console.log(OrderId);
+  //     console.log(eventId);
 
-      const event = await Event.findOne({
-        where: {
-          id: eventId,
-        },
-      });
-      if (!event) {
-        throw { name: "notFound" };
-      }
+  //     //transaction checker
+  //     const transaction = await Transaction.findOne({
+  //       where: {
+  //         OrderId,
+  //       },
+  //     });
+  //     if (!transaction) {
+  //       throw { name: "notFound" };
+  //     }
 
-      // const serverKey = process.env.MIDTRANS_SERVER_KEY;
-      const serverKey = "SB-Mid-server-FHY9yP5924-6a69eM5AT0rHB";
-      const base64ServerKey = Buffer.from(serverKey + ":").toString("base64");
+  //     const event = await Event.findOne({
+  //       where: {
+  //         id: eventId,
+  //       },
+  //     });
+  //     if (!event) {
+  //       throw { name: "notFound" };
+  //     }
 
-      // console.log(transaction);
+  //     // const serverKey = process.env.MIDTRANS_SERVER_KEY;
+  //     const serverKey = "SB-Mid-server-FHY9yP5924-6a69eM5AT0rHB";
+  //     const base64ServerKey = Buffer.from(serverKey + ":").toString("base64");
 
-      const response = await axios.get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
-        headers: {
-          Authorization: `Basic ${base64ServerKey}`,
-        },
-      });
-      if (response.data.transaction_status === "capture" && response.data.status_code === "200") {
-        //kurangin quantity tiket event ...
-        await transaction.update({ status: "Paid" });
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     // console.log(transaction);
+
+  //     const response = await axios.get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
+  //       headers: {
+  //         Authorization: `Basic ${base64ServerKey}`,
+  //       },
+  //     });
+  //     if (response.data.transaction_status === "capture" && response.data.status_code === "200") {
+  //       //kurangin quantity tiket event ...
+  //       await transaction.update({ status: "Paid" });
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async paymentNotification(req, res) {
     // console.log(req.body);
@@ -160,8 +213,11 @@ class transactionCtrl {
     const { order_id } = req.body;
 
     const transaction = await Transaction.findOne({
-      order_id,
+      where: {
+        OrderId: order_id,
+      },
     });
+
     if (!transaction) {
       throw { name: "notFound" };
     }
@@ -177,7 +233,7 @@ class transactionCtrl {
       let quantityUpdated = quantityTicketEvent - quantityTicket;
       await event.update({ quantity: quantityUpdated });
     }
-    res.status(200).json({ message: `${transaction.OrderId}transaction paid` });
+    res.status(200).json({ message: `${transaction.OrderId} transaction paid` });
   }
 }
 

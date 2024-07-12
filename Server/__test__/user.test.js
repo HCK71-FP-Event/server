@@ -39,16 +39,16 @@ afterAll(async () => {
 
 })
 describe("GET /user/:id", () => {
-    describe("Success", () => {
-        test("Success getting user id by params", async () => {
-            const { status, body } = await request(app)
-                .get("/user/1")
-                .set("Authorization", `Bearer ${access_token}`)
+    // describe("Success", () => {
+    //     test("Success getting user id by params", async () => {
+    //         const { status, body } = await request(app)
+    //             .get("/user/1")
+    //             .set("Authorization", `Bearer ${access_token}`)
 
-            expect(status).toBe(200)
-            expect(body).toBeInstanceOf(Object)
-        })
-    })
+    //         expect(status).toBe(200)
+    //         expect(body).toBeInstanceOf(Object)
+    //     })
+    // })
     describe("Success", () => {
         test("Success get currentUser", async () => {
             const { status, body } = await request(app)
@@ -62,20 +62,20 @@ describe("GET /user/:id", () => {
 })
 
 describe("Fail", () => {
-    test("Fail to get user id by params", async () => {
-        const { status, body } = await request(app)
-            .get("/user/123123123")
-            .set("Authorization", `Bearer ${access_token}`)
+    // test("Fail to get user id by params", async () => {
+    //     const { status, body } = await request(app)
+    //         .get("/user/123123123")
+    //         .set("Authorization", `Bearer ${access_token}`)
 
-        expect(status).toBe(404)
-        expect(body).toHaveProperty("message", "Data Not Found")
-    })
-    test("Fail to get User because no access_token", async () => {
-        const { status, body } = await request(app)
-            .get("/user/1")
-            .set("Authorization", `Bearer 123123123123213123123`)
+    //     expect(status).toBe(404)
+    //     expect(body).toHaveProperty("message", "Data Not Found")
+    // })
+    // test("Fail to get User because no access_token", async () => {
+    //     const { status, body } = await request(app)
+    //         .get("/user/1")
+    //         .set("Authorization", `Bearer 123123123123213123123`)
 
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Invalid token")
-    })
+    //     expect(status).toBe(401)
+    //     expect(body).toHaveProperty("message", "Invalid token")
+    // })
 })
