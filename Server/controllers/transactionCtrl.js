@@ -114,13 +114,15 @@ class transactionCtrl {
         isProduction: false,
         serverKey: process.env.MIDTRANS_SERVER_KEY,
       });
-
+      
       let parameter = {
         //data detail order
         transaction_details: {
           order_id: uuidv4(),
+          
           gross_amount: quantity * event.price,
         },
+        
         //data jenis pembayaran
         credit_card: {
           secure: true,
@@ -134,6 +136,8 @@ class transactionCtrl {
           age: new Date().getFullYear() - Number(user.birthOfDate.slice(6, 10)),
         },
       };
+    
+
 
       //II. Create transaction to midtrans
       const transaction = await snap.createTransaction(parameter);
