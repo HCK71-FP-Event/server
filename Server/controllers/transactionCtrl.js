@@ -157,13 +157,10 @@ class transactionCtrl {
     const { transaction_status } = req.body;
     const { status_code } = req.body;
     const { order_id } = req.body;
-    // console.log(transaction_status);
-    // console.log(status_code);
-    console.log(order_id, "line 162");
+
     const transaction = await Transaction.findOne({
       order_id,
     });
-    console.log(transaction, "line 166");
     if (!transaction) {
       throw { name: "notFound" };
     }
@@ -172,21 +169,13 @@ class transactionCtrl {
     const event = await Event.findOne({
       id: transaction.EventId,
     });
-    console.log(event, "detail event 175");
     const quantityTicketEvent = event.quantity;
 
-    // console.log(event, "event");
-    console.log(quantityTicket, "quantity ticket yang dibeli");
-    console.log(quantityTicketEvent, "quantity ticket event yang tersedia");
-
-    // console.log(transaction, "before");
     if (transaction_status === "capture" && status_code === "200") {
       await transaction.update({ status: "Paid" });
       let quantityUpdated = quantityTicketEvent - quantityTicket;
-      // console.log(quantityUpdated, "186");
       await event.update({ quantity: quantityUpdated });
     }
-    // console.log(transaction, "after");
     res.status(200).json({ message: `${transaction.OrderId}transaction paid` });
   }
 }
