@@ -78,4 +78,11 @@ describe("Fail", () => {
     //     expect(status).toBe(401)
     //     expect(body).toHaveProperty("message", "Invalid token")
     // })
+    test("Fail to get currentUser", async ()=> {
+        const{status, body} = await request(app)
+        .get("/currentUser")
+        
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Invalid token")
+    })
 })
