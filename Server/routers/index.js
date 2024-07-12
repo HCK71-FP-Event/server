@@ -10,6 +10,8 @@ const { transactionCtrl } = require("../controllers/transactionCtrl");
 router.post("/register", userCtrl.register);
 router.post("/login", userCtrl.login);
 
+router.post("/payment/notification", transactionCtrl.paymentNotification);
+
 router.use(authentication);
 
 router.get("/allEvent", eventCtrl.listEvent);
@@ -25,10 +27,8 @@ router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", transactionCtrl.findById);
 //midtrans
 //I. Initiate Order
-router.get(
-  "/payment/midtrans/initiate/:eventId",
-  transactionCtrl.initiateMidtransTrx
-);
-router.patch("/payment/midtrans/success/rooms/:id", transactionCtrl.updatePaymentStatus);
+router.get("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);
+//II. Update payment status
+router.patch("/payment/midtrans/success/event/:eventId", transactionCtrl.updatePaymentStatus);
 
 module.exports = router;
