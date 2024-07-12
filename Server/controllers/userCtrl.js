@@ -63,20 +63,20 @@ class userCtrl {
     }
   }
 
-  static async findUserById(req, res, next) {
-    try {
-      let { id } = req.params;
-      let userById = await User.findByPk(id);
+  // static async findUserById(req, res, next) {
+  //   try {
+  //     let { id } = req.params;
+  //     let userById = await User.findByPk(id);
 
-      if (!userById) {
-        throw { name: "notFound" };
-      } else {
-        res.status(200).json({ userById });
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     if (!userById) {
+  //       throw { name: "notFound" };
+  //     } else {
+  //       res.status(200).json({ userById });
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async findLoginUser(req, res, next) {
     try {

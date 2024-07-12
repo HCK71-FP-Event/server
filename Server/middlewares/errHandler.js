@@ -1,5 +1,4 @@
 const errHandler = (err, req, res, next) => {
-  console.log(err);
   switch (err.name) {
     case "SequelizeValidationError":
     case "SequelizeUniqueConstraintError":
@@ -37,6 +36,7 @@ const errHandler = (err, req, res, next) => {
       return;
     case "Unauthorized":
     case "JsonWebTokenError":
+    case "TokenExpiredError":
       res.status(401).json({ message: "Invalid token" });
       return;
     default:

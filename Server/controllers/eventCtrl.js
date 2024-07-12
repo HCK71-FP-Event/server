@@ -1,5 +1,8 @@
 const { sequelize } = require("../models");
 const { Event, Category } = require(`../models/index`);
+const { search, options } = require("../routers");
+const { Sequelize } = sequelize;
+const { Op, where } = require("sequelize");
 
 class eventCtrl {
   static async findEventsByRadius(req, res, next) {
@@ -38,11 +41,20 @@ class eventCtrl {
 
   static async listEvent(req, res, next) {
     try {
-      let allEvent = await Event.findAll({
+      const { search } = req.query;
+      let option = {
         include: {
           model: Category,
         },
-      });
+      };
+      if (search) {
+        option.where = {
+          name: { [Op.iLike]: `%${search}%` },
+        };
+      }
+
+      let allEvent = await Event.findAll(option);
+
       res.status(200).json({ allEvent });
     } catch (error) {
       next(error);
@@ -65,6 +77,27 @@ class eventCtrl {
       } else {
         res.status(200).json({ eventById });
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async createFreeEvent(req, res, next) {
+    try {
+      const { long, lat, name, imageUrl, CategoryId, eventDate, quantity } = req.body;
+      const locationConvert = Sequelize.fn("ST_GeomFromText", `POINT(${long} ${lat})`);
+      let result = await Event.create({
+        name,
+        imageUrl,
+        location: locationConvert,
+        CategoryId,
+        eventDate,
+        quantity,
+        isFree: true,
+        price: 0,
+      });
+      console.log(result);
+      res.status(201).json({ message: `event ${result.name} created!` });
     } catch (error) {
       next(error);
     }
