@@ -42,3 +42,9 @@
 // npx sequelize-cli model:create --name Category --attributes name:string
 // npx sequelize-cli model:create --name Event --attributes name:string,imageUrl:string,location:geometry,CategoryId:integer,eventDate:Date,quantity:integer,isFree:boolean,price:integer
 // npx sequelize-cli model:create --name Transaction --attributes OrderId:string,,quantity:integer,amount:integer,status:string,UserId:integer,EventId:integer
+
+
+//download https://developer.android.com/studio?gad_source=1&gclid=CjwKCAjwqMO0BhA8EiwAFTLgIEiIzFVHN6EOC00UvLh9zlaUrm2hp_DGZNfNEJ39BH4m7bwjkN1wExoCtAkQAvD_BwE&gclsrc=aw.ds
+// abis download itu, buka aplikasi itu , disuruh setting android virtual device, download lagi, npm start -> https://developer.android.com/studio/run/managing-avds
+
+//vysor -> ini buat hp di layar laptop ( mirroring )

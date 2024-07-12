@@ -45,7 +45,7 @@ class transactionCtrl {
 
       let event = await Event.findByPk(eventId);
       let user = await User.findByPk(req.user.id);
-      console.log(quantity, event.quantity);
+      // console.log(quantity, event.quantity);
 
       //event availability checker
       if (!event) {
@@ -63,13 +63,15 @@ class transactionCtrl {
         isProduction: false,
         serverKey: process.env.MIDTRANS_SERVER_KEY,
       });
-
+      
       let parameter = {
         //data detail order
         transaction_details: {
           order_id: uuidv4(),
+          
           gross_amount: quantity * event.price,
         },
+        
         //data jenis pembayaran
         credit_card: {
           secure: true,
@@ -83,10 +85,12 @@ class transactionCtrl {
           age: new Date().getFullYear() - Number(user.birthOfDate.slice(6, 10)),
         },
       };
+    
+
 
       //II. Create transaction to midtrans
       const transaction = await snap.createTransaction(parameter);
-      console.log(transaction);
+      // console.log(transaction);
       let transactionToken = transaction.token;
 
       //   III. Create order in DB
@@ -110,9 +114,6 @@ class transactionCtrl {
     try {
       const { eventId } = req.params;
       const { OrderId } = req.body;
-      console.log(OrderId);
-      console.log(eventId);
-
       //transaction checker
       const transaction = await Transaction.findOne({
         where: {
