@@ -41,7 +41,7 @@ let access_token
 
 beforeAll(async () => {
     try {
-        
+
         const users = require("../data/user.json").map((el) => {
             el.createdAt = el.updatedAt = new Date();
             el.password = hashPassword(el.password);
@@ -55,8 +55,8 @@ beforeAll(async () => {
         const category = await queryInterface.bulkInsert("Categories", [
             {
                 name: newCat.name,
-                createdAt : new Date(), 
-                updatedAt : new Date()
+                createdAt: new Date(),
+                updatedAt: new Date()
             }
         ])
 
@@ -110,7 +110,7 @@ afterAll(async () => {
             cascade: true,
             restartIdentity: true
         });
-        await queryInterface.bulkDelete("Categories", null,{
+        await queryInterface.bulkDelete("Categories", null, {
             truncate: true,
             restartIdentity: true,
             cascade: true
@@ -120,7 +120,7 @@ afterAll(async () => {
             restartIdentity: true,
             cascade: true
         });
-       
+
     } catch (error) {
         console.error("Error during afterAll:", error);
         throw error;
@@ -128,45 +128,135 @@ afterAll(async () => {
 });
 
 
+
 describe("POST /payment/midtrans/initiate/:eventId", () => {
     describe("Success", () => {
         test("Success get transactions initiate", async () => {
             const transaction = await Transaction.findOne()
             const { status, body } = await request(app)
-            .post(`/payment/midtrans/initiate/${transaction.id}`)
-            .set("Authorization", `Bearer ${access_token}`)
-            .send({
-                quantity: newTransaction.quantity
-            })
+                .post(`/payment/midtrans/initiate/${transaction.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
 
             expect(status).toBe(200);
             expect(body).toHaveProperty("message", "Order created")
         });
-        test("Success get transactions", async () => {
+    });
+    describe("Fail", () => {
+        test("Fail get transactions initiate, no access_token", async () => {
+            const transaction = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/midtrans/initiate/${transaction.id}`)
+                .set("Authorization", `Bearer 1203kasdkm`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail get transactions initiate because no event", async () => {
+            const { status, body } = await request(app)
+                .post(`/payment/midtrans/initiate/101010`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
+        })
+    })
+})
+
+describe("POST /payment/free-event/:eventId", () => {
+    describe("Success", () => {
+        test("Success get transactions initiate EventFree", async () => {
+            const transactions = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/${transactions.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(201)
+            expect(body).toHaveProperty("message", "Order created!")
+        })
+    })
+    describe("Fail", () => {
+        test("Fail, no access_token", async () => {
+            const transactions = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/${transactions.id}`)
+                .set("Authorization", `Bearer awokkoawkowa`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail, no quantity", async () => {
+            const transactions = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/${transactions.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+
+
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "quantity cannot be empty")
+        })
+    })
+})
+
+describe("GET /transactions", () => {
+    describe("Success", () => {
+        test("Success getting transactions", async () => {
             const { status, body } = await request(app)
                 .get("/transactions")
                 .set("Authorization", `Bearer ${access_token}`)
-    
+
             expect(status).toBe(200)
             expect(body).toBeInstanceOf(Object)
         })
-    });
-    describe("Fail", ()=> {
-        test("Fail get transactions initiate", async ()=> {
-            const transaction = await Transaction.findOne()
+    })
+    describe("Fail", () => {
+        test("Fail get transactions no access_token", async () => {
             const { status, body } = await request(app)
-             .get(`/payment/midtrans/initiate/${transaction.id}`)
-             .set("Authorization", `Bearer 1203kasdkm`)
+                .get("/transactions")
 
-             expect(status).toBe(401)
-             expect(body).toHaveProperty("message", "Invalid token")
-        })
-        test("Fail get transactions no access_token", async()=> {
-            const {status, body} = await request(app)
-            .get("/transactions")
-            
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
     })
 })
+describe("GET /transactions/:id", () => {
+    describe("Success", () => {
+        test("Success getting transactions", async () => {
+            const trans = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .get(`/transactions/${trans.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(200)
+            expect(body).toBeInstanceOf(Object)
+        })
+    })
+    describe("Fail", () => {
+        test("Fail getting transactions id, no access_token", async () => {
+            const trans = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .get(`/transactions/${trans.id}`)
+                .set("Authorization", `Bearer 10239103291023`)
+
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+    })
+})
+
+
+
