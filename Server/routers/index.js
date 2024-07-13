@@ -11,14 +11,14 @@ router.post("/register", userCtrl.register);
 router.post("/login", userCtrl.login);
 
 //II. Update payment status MIDTRANS
-router.post("/payment/notification", transactionCtrl.paymentNotification);
+router.post("/payment/notification", transactionCtrl.paymentNotification); // testing
 
 router.use(authentication);
 
 router.get("/allEvent", eventCtrl.listEvent);
 router.get("/allEvent/:id", eventCtrl.listEventById);
 router.get("/event", eventCtrl.findEventsByRadius);
-router.post("/event", eventCtrl.createFreeEvent)
+router.post("/event", eventCtrl.createFreeEvent) // ini testing
 
 router.get("/categories", categoryCtrl.getCategory);
 
@@ -27,7 +27,7 @@ router.get("/currentUser", userCtrl.findLoginUser);
 
 router.get("/transactions", transactionCtrl.findAll);
 // router.get("/transactions/:id", transactionCtrl.findById);
-router.post('/payment/free-event/:eventId', transactionCtrl.freeEvent)
+router.post('/payment/free-event/:eventId', transactionCtrl.freeEvent) // ini testing
 //midtrans
 //I. Initiate Order
 router.post("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);
