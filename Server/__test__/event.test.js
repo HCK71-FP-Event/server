@@ -17,7 +17,7 @@ const newEvent = {
         coordinates: {
             long: 106.7827090935093,
             lat: -6.26326708553454
-          }
+        }
     },
     CategoryId: 1,
     eventDate: "2024-07-08",
@@ -43,8 +43,8 @@ beforeAll(async () => {
         const category = await queryInterface.bulkInsert("Categories", [
             {
                 name: newCat.name,
-                createdAt : new Date(), 
-                updatedAt : new Date()
+                createdAt: new Date(),
+                updatedAt: new Date()
             }
         ])
 
@@ -66,7 +66,7 @@ beforeAll(async () => {
             }
         ]);
 
-    
+
     } catch (error) {
         console.error("Error during beforeAll:", error);
         throw error;
@@ -80,7 +80,7 @@ afterAll(async () => {
             cascade: true,
             restartIdentity: true
         });
-        await queryInterface.bulkDelete("Categories", null,{
+        await queryInterface.bulkDelete("Categories", null, {
             truncate: true,
             restartIdentity: true,
             cascade: true
@@ -97,6 +97,115 @@ afterAll(async () => {
     }
 });
 
+
+describe("POST /event", () => {
+    describe("Success", () => {
+        test("Success create Event", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    "name": "test",
+                    "imageUrl": "example.jpg",
+                    "CategoryId": 1,
+                    "eventDate": "2024-08-08",
+                    "quantity": 100,
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+                })
+
+            expect(status).toBe(201)
+            expect(body).toHaveProperty("message", "event test created!")
+        })
+    })
+    describe("Fail", () => {
+        test("name is empty", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    "name": "",
+                    "imageUrl": "example.jpg",
+                    "CategoryId": 1,
+                    "eventDate": "2024-08-08",
+                    "quantity": 100,
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "name cannot be empty")
+        })
+        test("image is empty", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    "name": "test",
+                    "imageUrl": "",
+                    "CategoryId": 1,
+                    "eventDate": "2024-08-08",
+                    "quantity": 100,
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "imageUrl cannot be empty")
+        })
+        test("eventDate is empty", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    "name": "test",
+                    "imageUrl": "example.jgp",
+                    "CategoryId": 1,
+                    "eventDate": "",
+                    "quantity": 100,
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "eventDate cannot be empty")
+        })
+        test("quantity is empty", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    "name": "test",
+                    "imageUrl": "example.jgp",
+                    "CategoryId": 1,
+                    "eventDate": "2024-08-08",
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+
+                })
+            expect(status).toBe(400)
+            expect(body).toHaveProperty("message", "quantity cannot be empty")
+        })
+        test("token is invalid", async () => {
+            const { status, body } = await request(app)
+                .post("/event")
+                .set("Authorization", `Bearer 12031209312930129`)
+                .send({
+                    "name": "test",
+                    "imageUrl": "example.jgp",
+                    "CategoryId": 1,
+                    "eventDate": "2024-08-08",
+                    "long": 106.7827090935093,
+                    "lat": -6.26326708553454
+
+                })
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+    })
+})
+
+
 describe("GET /event", () => {
     describe("Success", () => {
         test("Success get events", async () => {
@@ -109,9 +218,9 @@ describe("GET /event", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get events, no access_token", async ()=> {
-            const {status, body} = await request(app)
-            .get("/event")
+        test("Fail get events, no access_token", async () => {
+            const { status, body } = await request(app)
+                .get("/event")
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
@@ -131,15 +240,15 @@ describe("GET /allEvent", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get allEvents, no access_token", async ()=> {
-            const {status, body} = await request(app)
-            .get("/allEvent")
+        test("Fail get allEvents, no access_token", async () => {
+            const { status, body } = await request(app)
+                .get("/allEvent")
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
     })
-    
+
 });
 
 describe("GET /allEvent/:id", () => {
@@ -155,21 +264,21 @@ describe("GET /allEvent/:id", () => {
         });
     });
     describe("Fail", () => {
-        test("Fail get allEvent by id , no access_token", async ()=> {
+        test("Fail get allEvent by id , no access_token", async () => {
             const event = await Event.findOne()
-            const {status, body} = await request(app)
-            .get(`/allEvent/${event.id}`)
+            const { status, body } = await request(app)
+                .get(`/allEvent/${event.id}`)
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
-        test("Fail get allEvent by id is not found", async ()=> {
-            const {status, body} = await request(app)
-            .get(`/allEvent/1231231`)
-            .set("Authorization", `Bearer ${access_token}`)
+        test("Fail get allEvent by id is not found", async () => {
+            const { status, body } = await request(app)
+                .get(`/allEvent/1231231`)
+                .set("Authorization", `Bearer ${access_token}`)
 
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
         })
     })
-});
+})
