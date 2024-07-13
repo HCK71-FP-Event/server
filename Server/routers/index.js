@@ -6,6 +6,7 @@ const { userCtrl } = require("../controllers/userCtrl");
 const { eventCtrl } = require("../controllers/eventCtrl");
 const { categoryCtrl } = require("../controllers/categoryCtrl");
 const { transactionCtrl } = require("../controllers/transactionCtrl");
+const { authorization } = require("../middlewares/authorization");
 
 router.post("/register", userCtrl.register);
 router.post("/login", userCtrl.login);
@@ -18,7 +19,7 @@ router.use(authentication);
 router.get("/allEvent", eventCtrl.listEvent);
 router.get("/allEvent/:id", eventCtrl.listEventById);
 router.get("/event", eventCtrl.findEventsByRadius);
-router.post("/event", eventCtrl.createFreeEvent)
+router.post("/event", eventCtrl.createFreeEvent);
 
 router.get("/categories", categoryCtrl.getCategory);
 
@@ -26,8 +27,8 @@ router.get("/categories", categoryCtrl.getCategory);
 router.get("/currentUser", userCtrl.findLoginUser);
 
 router.get("/transactions", transactionCtrl.findAll);
-// router.get("/transactions/:id", transactionCtrl.findById);
-router.post('/payment/free-event/:eventId', transactionCtrl.freeEvent)
+router.get("/transactions/:id", authorization, transactionCtrl.findById);
+router.post("/payment/free-event/:eventId", transactionCtrl.freeEvent);
 //midtrans
 //I. Initiate Order
 router.post("/payment/midtrans/initiate/:eventId", transactionCtrl.initiateMidtransTrx);

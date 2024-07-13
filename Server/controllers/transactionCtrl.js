@@ -22,7 +22,7 @@ class transactionCtrl {
     }
   }
 
-  /* static async findById(req, res, next) {
+  static async findById(req, res, next) {
     try {
       let { id } = req.params;
       let result = await Transaction.findByPk(id, {
@@ -33,13 +33,26 @@ class transactionCtrl {
               exclude: ["password"],
             },
           },
+
+          {
+            model: Event,
+          },
         ],
       });
-      res.status(200).json(result);
+      res.status(200).json({
+        OrderId: result.OrderId,
+        name: result.User.fullName,
+        phoneNumber: result.User.phoneNumber,
+        email: result.User.email,
+        event: result.Event.name,
+        eventDate: result.Event.eventDate,
+        status: result.status,
+        grandTotal: result.amount,
+      });
     } catch (error) {
       next(error);
     }
-  } */
+  }
 
   //menerima eventId dari params dan quantity ticket dari req.body
   static async freeEvent(req, res, next) {
@@ -114,15 +127,15 @@ class transactionCtrl {
         isProduction: false,
         serverKey: process.env.MIDTRANS_SERVER_KEY,
       });
-      
+
       let parameter = {
         //data detail order
         transaction_details: {
           order_id: uuidv4(),
-          
+
           gross_amount: quantity * event.price,
         },
-        
+
         //data jenis pembayaran
         credit_card: {
           secure: true,
@@ -136,8 +149,6 @@ class transactionCtrl {
           age: new Date().getFullYear() - Number(user.birthOfDate.slice(6, 10)),
         },
       };
-    
-
 
       //II. Create transaction to midtrans
       const transaction = await snap.createTransaction(parameter);
