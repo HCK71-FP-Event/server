@@ -165,7 +165,7 @@ class transactionCtrl {
         //transactionToken boleh disimpen (opsional), supaya ketika pembayaran pending, token bisa dikirim kembali ke user
       });
 
-      res.json({ message: "Order created", token: transactionToken, redirect_url: transaction.redirect_url });
+      res.status(201).json({ message: "Order created", token: transactionToken, redirect_url: transaction.redirect_url });
     } catch (error) {
       next(error);
     }
