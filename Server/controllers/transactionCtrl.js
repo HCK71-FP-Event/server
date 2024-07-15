@@ -60,14 +60,14 @@ class transactionCtrl {
       const { eventId } = req.params;
       const { quantity } = req.body;
       const event = await Event.findByPk(eventId);
-      const user = await User.findOne({
-        id: event.UserId,
-      });
-
       //check event is available
       if (!event) {
         throw { name: "notFound" };
       }
+
+      const user = await User.findOne({
+        id: event.UserId,
+      });
 
       //check event ticket is available
       if (quantity > event.quantity) {
@@ -109,12 +109,12 @@ class transactionCtrl {
       let { quantity } = req.body;
 
       let event = await Event.findByPk(eventId);
-      let user = await User.findByPk(req.user.id);
-
       //event availability checker
       if (!event) {
         throw { name: "notFound" };
       }
+
+      let user = await User.findByPk(req.user.id);
 
       //event ticket availability checker
       if (quantity > event.quantity) {
