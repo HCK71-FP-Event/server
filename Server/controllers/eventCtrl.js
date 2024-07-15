@@ -7,20 +7,20 @@ const { Op, where } = require("sequelize");
 class eventCtrl {
   static async findEventsByRadius(req, res, next) {
     try {
-      // distance on meter unit
-      const distance = req.query.distance || 2000;
-      const long = req.query.long || "-6.254018391520317";
-      const lat = req.query.lat || "106.7817000598548";
+      const distance = req.query.distance || 5000;
+      const lat = req.query.lat || "-6.254018391520317";
+      const long = req.query.long || "106.7817000598548";
 
       const result = await sequelize.query(
-        `select * from
-          "Events"
-        where
-          ST_DWithin(location,
-          ST_MakePoint(:lat,
-          :long),
-          :distance,
-        true) = true;`,
+        `select e.*, 
+        jsonb_build_object('name', c.name) AS "Category"
+        from "Events" e
+        JOIN 
+        "Categories" c ON e."CategoryId" = c.id
+        where ST_DWithin(e.location,
+                ST_MakePoint(:long, :lat),
+                :distance,
+                true) = true;`,
         {
           replacements: {
             distance: +distance,
@@ -59,8 +59,6 @@ class eventCtrl {
           name: { [Op.iLike]: `%${search}%` },
         };
       }
-
-      console.log(filter);
 
       let allEvent = await Event.findAll(option);
 
@@ -106,7 +104,6 @@ class eventCtrl {
         price: 0,
         description,
       });
-      console.log(result);
       res.status(201).json({ message: `event ${result.name} created!` });
     } catch (error) {
       next(error);
