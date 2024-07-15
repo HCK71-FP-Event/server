@@ -7,8 +7,14 @@ const { createToken } = require("../helpers/jsonwebtoken")
 const { hashPassword } = require("../helpers/bcrypt")
 const { queryInterface, Sequelize } = sequelize
 
+
+const dummyMidtrans = {
+    transaction_status: "capture",
+    status_code: 200,
+    order_id: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7"
+}
 const newTransaction = {
-    OrderId: 1,
+    OrderId: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7",
     quantity: 10,
     amount: 100000,
     status: "pending",
@@ -82,7 +88,7 @@ beforeAll(async () => {
         await queryInterface.bulkInsert("Transactions", [
             {
                 OrderId: newTransaction.OrderId,
-                quantity: 2,
+                quantity: newTransaction.quantity,
                 amount: newTransaction.amount,
                 status: newTransaction.status,
                 UserId: newTransaction.UserId,
@@ -120,7 +126,7 @@ afterAll(async () => {
             restartIdentity: true,
             cascade: true
         });
-
+       
     } catch (error) {
         console.error("Error during afterAll:", error);
         throw error;
@@ -140,7 +146,7 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
                     quantity: newTransaction.quantity
                 })
 
-            expect(status).toBe(200);
+            expect(status).toBe(201);
             expect(body).toHaveProperty("message", "Order created")
         });
     });
@@ -167,6 +173,41 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
 
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
+        })
+        test("Fail out of stock", async ()=> {
+            const{status, body} = await request(app)
+            .post("/payment/midtrans/initiate/1")
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 11
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Ticket out of stock")
+        })
+        test("Fail because quantity is empty", async ()=> {
+            const{status, body} = await request(app)
+            .post("/payment/midtrans/initiate/1")
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 0
+            })
+           
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
+        })
+    })
+})
+
+describe("POST /payment/notification", ()=> {
+    describe("Success", ()=> {
+        test("Succes get notification after payment", async()=> {
+            const {status, body } = await request(app)
+            .post("/payment/notification")
+            .send(dummyMidtrans)
+
+            expect(status).toBe(200)
+            expect(body).toHaveProperty("message", `${dummyMidtrans.order_id} transaction paid`)
         })
     })
 })
@@ -208,6 +249,29 @@ describe("POST /payment/free-event/:eventId", () => {
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "quantity cannot be empty")
+        })
+        test("Fail because out of stock", async ()=> {
+            const transactions = await Transaction.findOne()
+            const{status, body} = await request(app)
+            .post(`/payment/free-event/${transactions.id}`)
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 200
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Ticket out of stock")
+        })
+        test("Fail because event not found", async ()=> {
+            const{status, body} = await request(app)
+            .post(`/payment/free-event/123123123`)
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: newTransaction.quantity
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
         })
     })
 })
