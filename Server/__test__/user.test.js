@@ -38,7 +38,7 @@ afterAll(async () => {
     })
 
 })
-describe("GET /user/:id", () => {
+describe("GET /currentUser", () => {
     // describe("Success", () => {
     //     test("Success getting user id by params", async () => {
     //         const { status, body } = await request(app)
@@ -78,7 +78,7 @@ describe("Fail", () => {
     //     expect(status).toBe(401)
     //     expect(body).toHaveProperty("message", "Invalid token")
     // })
-    test("Fail to get currentUser", async ()=> {
+    test("Fail to get currentUser, no access_token", async ()=> {
         const{status, body} = await request(app)
         .get("/currentUser")
         
