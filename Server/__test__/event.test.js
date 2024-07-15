@@ -23,7 +23,8 @@ const newEvent = {
     eventDate: "2024-07-08",
     quantity: 10,
     isFree: true,
-    price: 100
+    price: 100,
+    description: "Halo anjay"
 };
 
 let access_token;
@@ -61,6 +62,7 @@ beforeAll(async () => {
                 quantity: newEvent.quantity,
                 isFree: newEvent.isFree,
                 price: newEvent.price,
+                description: newEvent.description,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }
@@ -110,6 +112,7 @@ describe("POST /event", () => {
                     "CategoryId": 1,
                     "eventDate": "2024-08-08",
                     "quantity": 100,
+                    "description": "halo",
                     "long": 106.7827090935093,
                     "lat": -6.26326708553454
                 })

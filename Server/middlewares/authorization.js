@@ -4,7 +4,6 @@ const authorization = async (req, res, next) => {
   try {
     const { id } = req.params;
     const transaction = await Transaction.findByPk(id);
-    // console.log(req.params.id);
     if (transaction.UserId === req.user.id) {
       next();
     } else {

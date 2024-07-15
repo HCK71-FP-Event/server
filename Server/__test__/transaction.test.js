@@ -11,10 +11,10 @@ const { queryInterface, Sequelize } = sequelize
 const dummyMidtrans = {
     transaction_status: "capture",
     status_code: 200,
-    order_id: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7"
+    order_id: "0e9e697f-72dc-4e38-814e-1330d6c00ec0"
 }
 const newTransaction = {
-    OrderId: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7",
+    OrderId: "0e9e697f-72dc-4e38-814e-1330d6c00ec0",
     quantity: 10,
     amount: 100000,
     status: "pending",
@@ -40,7 +40,8 @@ const newEvent = {
     eventDate: "2024-07-08",
     quantity: 10,
     isFree: true,
-    price: 100
+    price: 100,
+    description: "HALO ANJAY"
 };
 
 let access_token
@@ -80,6 +81,7 @@ beforeAll(async () => {
                 quantity: newEvent.quantity,
                 isFree: newEvent.isFree,
                 price: newEvent.price,
+                description: newEvent.description,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }
@@ -208,6 +210,20 @@ describe("POST /payment/notification", ()=> {
 
             expect(status).toBe(200)
             expect(body).toHaveProperty("message", `${dummyMidtrans.order_id} transaction paid`)
+        })
+    })
+    describe("Fail", ()=> {
+        test("Fail to get transaction", async()=> {
+            const{status, body}= await request(app)
+            .post("/payment/notification")
+            .send({
+                transaction_status: "capture",
+                status_code: 200,
+                order_id: "wk"
+            })
+           
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
         })
     })
 })
