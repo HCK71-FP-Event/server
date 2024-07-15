@@ -219,33 +219,41 @@ class transactionCtrl {
   // }
 
   static async paymentNotification(req, res) {
-    // console.log(req.body);
-    const { transaction_status } = req.body;
-    const { status_code } = req.body;
-    const { order_id } = req.body;
+    try {
+  // console.log(req.body, "im here <");
 
-    const transaction = await Transaction.findOne({
-      where: {
-        OrderId: order_id,
-      },
-    });
+      const { transaction_status } = req.body;
+      const { status_code } = req.body;
+      const { order_id } = req.body;
 
-    if (!transaction) {
-      throw { name: "notFound" };
+      const transaction = await Transaction.findOne({
+        where: {
+          OrderId: order_id,
+        },
+      });
+
+
+      if (!transaction) {
+        throw { name: "notFound" };
+      }
+      const quantityTicket = transaction.quantity;
+
+      const event = await Event.findOne({
+        id: transaction.EventId,
+      });
+      const quantityTicketEvent = event.quantity;
+
+      if (transaction_status === "capture" && status_code === "200") {
+        await transaction.update({ status: "Paid" });
+        let quantityUpdated = quantityTicketEvent - quantityTicket;
+        await event.update({ quantity: quantityUpdated });
+      }
+      res.status(200).json({ message: `${transaction.OrderId} transaction paid` });
+
+    } catch (error) {
+      next()
+      // console.log(error, "error disini");
     }
-    const quantityTicket = transaction.quantity;
-
-    const event = await Event.findOne({
-      id: transaction.EventId,
-    });
-    const quantityTicketEvent = event.quantity;
-
-    if (transaction_status === "capture" && status_code === "200") {
-      await transaction.update({ status: "Paid" });
-      let quantityUpdated = quantityTicketEvent - quantityTicket;
-      await event.update({ quantity: quantityUpdated });
-    }
-    res.status(200).json({ message: `${transaction.OrderId} transaction paid` });
   }
 }
 
