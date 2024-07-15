@@ -42,16 +42,25 @@ class eventCtrl {
   static async listEvent(req, res, next) {
     try {
       const { search } = req.query;
+      const { filter } = req.query;
       let option = {
         include: {
           model: Category,
         },
       };
+
+      if (filter) {
+        option.include.where = {
+          name: { [Op.iLike]: `%${filter}%` },
+        };
+      }
       if (search) {
         option.where = {
           name: { [Op.iLike]: `%${search}%` },
         };
       }
+
+      console.log(filter);
 
       let allEvent = await Event.findAll(option);
 
