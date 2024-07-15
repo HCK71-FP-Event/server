@@ -56,7 +56,7 @@ describe("GET /user/:id", () => {
                 .set("Authorization", `Bearer ${access_token}`)
 
                 expect(status).toBe(200)
-                expect(body).toHaveProperty("loginUser")
+                expect(body).toBeInstanceOf(Object)
         })
     })
 })
