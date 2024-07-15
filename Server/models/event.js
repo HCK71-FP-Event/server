@@ -71,6 +71,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       isFree: DataTypes.BOOLEAN,
       price: DataTypes.INTEGER,
+      description: DataTypes.STRING
     },
     {
       sequelize,
