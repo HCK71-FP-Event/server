@@ -222,7 +222,7 @@ class transactionCtrl {
 
   static async paymentNotification(req, res) {
     try {
-  // console.log(req.body, "im here <");
+      // console.log(req.body, "im here <");
 
       const { transaction_status } = req.body;
       const { status_code } = req.body;
@@ -234,22 +234,17 @@ class transactionCtrl {
         },
       });
 
-    const event = await Event.findOne({
-      where: {
-        id: transaction.EventId,
-      },
-    });
-    const quantityTicketEvent = event.quantity;
+      const event = await Event.findOne({
+        where: {
+          id: transaction.EventId,
+        },
+      });
+      const quantityTicketEvent = event.quantity;
 
       if (!transaction) {
         throw { name: "notFound" };
       }
       const quantityTicket = transaction.quantity;
-
-      const event = await Event.findOne({
-        id: transaction.EventId,
-      });
-      const quantityTicketEvent = event.quantity;
 
       if (transaction_status === "capture" && status_code === "200") {
         await transaction.update({ status: "Paid" });
@@ -257,9 +252,8 @@ class transactionCtrl {
         await event.update({ quantity: quantityUpdated });
       }
       res.status(200).json({ message: `${transaction.OrderId} transaction paid` });
-
     } catch (error) {
-      next()
+      next();
       // console.log(error, "error disini");
     }
   }
