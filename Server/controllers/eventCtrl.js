@@ -93,7 +93,7 @@ class eventCtrl {
 
   static async createFreeEvent(req, res, next) {
     try {
-      const { long, lat, name, imageUrl, CategoryId, eventDate, quantity } = req.body;
+      const { long, lat, name, imageUrl, CategoryId, eventDate, quantity, description } = req.body;
       const locationConvert = Sequelize.fn("ST_GeomFromText", `POINT(${long} ${lat})`);
       let result = await Event.create({
         name,
@@ -104,6 +104,7 @@ class eventCtrl {
         quantity,
         isFree: true,
         price: 0,
+        description,
       });
       console.log(result);
       res.status(201).json({ message: `event ${result.name} created!` });

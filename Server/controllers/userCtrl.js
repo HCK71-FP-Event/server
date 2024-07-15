@@ -70,6 +70,26 @@ class userCtrl {
   //   }
   // }
 
+  // static async editUserProfile(req, res, next) {
+  //   try {
+  //     const { id } = req.user;
+  //     const { email, fullName, phoneNumber, address, avatar, birthOfDate } = req.body;
+  //     const user = await User.findByPk(id);
+  //     if (!user) throw { name: "notFound" };
+  //     await user.update({
+  //       email,
+  //       fullName,
+  //       phoneNumber,
+  //       address,
+  //       avatar,
+  //       birthOfDate,
+  //     });
+  //     res.status(200).json({ message: `User updated!` });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
   static async findLoginUser(req, res, next) {
     try {
       let loginUser = await User.findByPk(req.user.id, {

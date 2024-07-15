@@ -25,6 +25,7 @@ router.get("/categories", categoryCtrl.getCategory);
 
 // router.get("/user/:id", userCtrl.findUserById);
 router.get("/currentUser", userCtrl.findLoginUser);
+// router.put("/user", userCtrl.editUserProfile)
 
 router.get("/transactions", transactionCtrl.findAll);
 router.get("/transactions/:id", authorization, transactionCtrl.findById);
