@@ -113,9 +113,10 @@ class transactionCtrl {
       if (!event) {
         throw { name: "notFound" };
       }
-
       let user = await User.findByPk(req.user.id);
-
+      if (!quantity) {
+        throw { name: "notFound" };
+      }
       //event ticket availability checker
       if (quantity > event.quantity) {
         throw { name: "outOfStock" };
