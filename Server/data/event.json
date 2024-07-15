@@ -13,7 +13,8 @@
       "eventDate": "2024-08-01T08:00:00Z",
       "quantity": 100,
       "isFree": true,
-      "price": 2000000
+      "price": 2000000,
+      "description": "Lorem ipsum ... ... ..."
     },
     {
       "name": "Event B",
@@ -29,7 +30,8 @@
       "eventDate": "2024-08-15T10:00:00Z",
       "quantity": 150,
       "isFree": false,
-      "price": 2000020
+      "price": 2000020,
+      "description": "Lorem ipsum ... ... ..."
     },
     {
       "name": "Event C",
@@ -45,7 +47,8 @@
       "eventDate": "2024-09-01T12:00:00Z",
       "quantity": 200,
       "isFree": true,
-      "price": 300000
+      "price": 300000,
+      "description": "Lorem ipsum ... ... ..."
     }
   ]
   

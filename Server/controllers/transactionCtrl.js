@@ -66,7 +66,9 @@ class transactionCtrl {
       }
 
       const user = await User.findOne({
-        id: event.UserId,
+        where: {
+          id: event.UserId,
+        },
       });
 
       //check event ticket is available
@@ -236,7 +238,9 @@ class transactionCtrl {
     const quantityTicket = transaction.quantity;
 
     const event = await Event.findOne({
-      id: transaction.EventId,
+      where: {
+        id: transaction.EventId,
+      },
     });
     const quantityTicketEvent = event.quantity;
 
