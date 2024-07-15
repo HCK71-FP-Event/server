@@ -7,8 +7,14 @@ const { createToken } = require("../helpers/jsonwebtoken")
 const { hashPassword } = require("../helpers/bcrypt")
 const { queryInterface, Sequelize } = sequelize
 
+
+const dummyMidtrans = {
+    transaction_status: "capture",
+    status_code: 200,
+    order_id: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7"
+}
 const newTransaction = {
-    OrderId: 1,
+    OrderId: "1dbeb5eb-98f2-4513-adf7-0ba34f1d3df7",
     quantity: 10,
     amount: 100000,
     status: "pending",
@@ -82,7 +88,7 @@ beforeAll(async () => {
         await queryInterface.bulkInsert("Transactions", [
             {
                 OrderId: newTransaction.OrderId,
-                quantity: 2,
+                quantity: newTransaction.quantity,
                 amount: newTransaction.amount,
                 status: newTransaction.status,
                 UserId: newTransaction.UserId,
@@ -120,7 +126,7 @@ afterAll(async () => {
             restartIdentity: true,
             cascade: true
         });
-
+       
     } catch (error) {
         console.error("Error during afterAll:", error);
         throw error;
@@ -189,6 +195,19 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
            
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
+        })
+    })
+})
+
+describe("POST /payment/notification", ()=> {
+    describe("Success", ()=> {
+        test("Succes get notification after payment", async()=> {
+            const {status, body } = await request(app)
+            .post("/payment/notification")
+            .send(dummyMidtrans)
+
+            expect(status).toBe(200)
+            expect(body).toHaveProperty("message", `${dummyMidtrans.order_id} transaction paid`)
         })
     })
 })
