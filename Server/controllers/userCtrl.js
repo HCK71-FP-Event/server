@@ -99,7 +99,7 @@ class userCtrl {
       });
 
       if (!loginUser) {
-        throw { name: "notFound" };
+        throw { name: "Unauthorized" };
       } else {
         res.status(200).json(loginUser);
       }

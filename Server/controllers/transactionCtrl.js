@@ -66,9 +66,7 @@ class transactionCtrl {
       }
 
       const user = await User.findOne({
-        where: {
-          id: event.UserId,
-        },
+          id: event.UserId
       });
 
       //check event ticket is available
@@ -100,6 +98,7 @@ class transactionCtrl {
         },
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -112,6 +111,7 @@ class transactionCtrl {
 
       let event = await Event.findByPk(eventId);
       //event availability checker
+      console.log(event, "event gagal");
       if (!event) {
         throw { name: "notFound" };
       }
@@ -220,7 +220,7 @@ class transactionCtrl {
   //   }
   // }
 
-  static async paymentNotification(req, res) {
+  static async paymentNotification(req, res, next) {
     try {
       // console.log(req.body, "im here <");
 
@@ -234,16 +234,17 @@ class transactionCtrl {
         },
       });
 
+      if (!transaction) {
+        throw { name: "notFound" };
+      }
       const event = await Event.findOne({
         where: {
           id: transaction.EventId,
         },
       });
+      
       const quantityTicketEvent = event.quantity;
 
-      if (!transaction) {
-        throw { name: "notFound" };
-      }
       const quantityTicket = transaction.quantity;
 
       if (transaction_status === "capture" && status_code === "200") {
@@ -253,8 +254,8 @@ class transactionCtrl {
       }
       res.status(200).json({ message: `${transaction.OrderId} transaction paid` });
     } catch (error) {
-      next();
-      // console.log(error, "error disini");
+      console.log(error, "error disini");
+      next(error);
     }
   }
 }

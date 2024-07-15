@@ -60,7 +60,7 @@ class eventCtrl {
         };
       }
 
-      console.log(filter);
+      // console.log(filter);
 
       let allEvent = await Event.findAll(option);
 
@@ -106,7 +106,7 @@ class eventCtrl {
         price: 0,
         description,
       });
-      console.log(result);
+      // console.log(result);
       res.status(201).json({ message: `event ${result.name} created!` });
     } catch (error) {
       next(error);
