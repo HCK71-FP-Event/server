@@ -140,7 +140,7 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
                     quantity: newTransaction.quantity
                 })
 
-            expect(status).toBe(200);
+            expect(status).toBe(201);
             expect(body).toHaveProperty("message", "Order created")
         });
     });
@@ -165,6 +165,28 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
                     quantity: newTransaction.quantity
                 })
 
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
+        })
+        test("Fail out of stock", async ()=> {
+            const{status, body} = await request(app)
+            .post("/payment/midtrans/initiate/1")
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 11
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Ticket out of stock")
+        })
+        test("Fail because quantity is empty", async ()=> {
+            const{status, body} = await request(app)
+            .post("/payment/midtrans/initiate/1")
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 0
+            })
+           
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
         })
@@ -208,6 +230,29 @@ describe("POST /payment/free-event/:eventId", () => {
 
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "quantity cannot be empty")
+        })
+        test("Fail because out of stock", async ()=> {
+            const transactions = await Transaction.findOne()
+            const{status, body} = await request(app)
+            .post(`/payment/free-event/${transactions.id}`)
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: 200
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Ticket out of stock")
+        })
+        test("Fail because event not found", async ()=> {
+            const{status, body} = await request(app)
+            .post(`/payment/free-event/123123123`)
+            .set("Authorization", `Bearer ${access_token}`)
+            .send({
+                quantity: newTransaction.quantity
+            })
+
+            expect(status).toBe(404)
+            expect(body).toHaveProperty("message", "Data Not Found")
         })
     })
 })
