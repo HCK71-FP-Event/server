@@ -66,7 +66,7 @@ class transactionCtrl {
       }
 
       const user = await User.findOne({
-          id: event.UserId
+        id: event.UserId
       });
 
       //check event ticket is available
@@ -111,7 +111,6 @@ class transactionCtrl {
 
       let event = await Event.findByPk(eventId);
       //event availability checker
-      console.log(event, "event gagal");
       if (!event) {
         throw { name: "notFound" };
       }
@@ -242,7 +241,7 @@ class transactionCtrl {
           id: transaction.EventId,
         },
       });
-      
+
       const quantityTicketEvent = event.quantity;
 
       const quantityTicket = transaction.quantity;
