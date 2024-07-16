@@ -24,7 +24,6 @@ class transactionCtrl {
 
   static async findById(req, res, next) {
     try {
-      console.log("masuk controller");
       let { id } = req.params;
       let result = await Transaction.findByPk(id, {
         include: [
