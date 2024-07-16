@@ -46,6 +46,7 @@ class transactionCtrl {
         email: result.User.email,
         event: result.Event.name,
         eventDate: result.Event.eventDate,
+        ticketQuantity: result.quantity,
         status: result.status,
         grandTotal: result.amount,
       });
@@ -66,7 +67,7 @@ class transactionCtrl {
       }
 
       const user = await User.findOne({
-        id: event.UserId
+        id: event.UserId,
       });
 
       //check event ticket is available

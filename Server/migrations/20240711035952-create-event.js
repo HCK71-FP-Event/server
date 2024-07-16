@@ -52,6 +52,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      UserId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
     });
   },
   async down(queryInterface, Sequelize) {

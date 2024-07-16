@@ -1,5 +1,7 @@
 "use strict";
 
+const { hashPassword } = require("../helpers/bcrypt");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -17,15 +19,19 @@ module.exports = {
       return el;
     });
 
-    let dataEvent = require(`../data/event.json`).map((el) => {
+    let dataUser = require("../data/user.json").map((el) => {
       el.createdAt = el.updatedAt = new Date();
-      el.location = Sequelize.fn(
-        "ST_GeomFromText",
-        `POINT(${el.location.coordinates.long} ${el.location.coordinates.lat})`
-      );
+      el.password = hashPassword(el.password);
       return el;
     });
 
+    let dataEvent = require(`../data/event.json`).map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      el.location = Sequelize.fn("ST_GeomFromText", `POINT(${el.location.coordinates.long} ${el.location.coordinates.lat})`);
+      return el;
+    });
+
+    await queryInterface.bulkInsert("Users", dataUser, {});
     await queryInterface.bulkInsert("Categories", dataCategory, {});
     await queryInterface.bulkInsert("Events", dataEvent, {});
   },
@@ -37,7 +43,8 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("Categories", null, {});
     await queryInterface.bulkDelete("Events", null, {});
+    await queryInterface.bulkDelete("Categories", null, {});
+    await queryInterface.bulkDelete("Users", null, {});
   },
 };

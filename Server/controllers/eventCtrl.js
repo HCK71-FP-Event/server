@@ -1,6 +1,6 @@
 const { sequelize } = require("../models");
-const { Event, Category } = require(`../models/index`);
-const { search, options } = require("../routers");
+const { Event, Category, User } = require(`../models/index`);
+const { search, options, use } = require("../routers");
 const { Sequelize } = sequelize;
 const { Op, where } = require("sequelize");
 
@@ -79,10 +79,17 @@ class eventCtrl {
         ],
       });
 
+      let user = await User.findByPk(req.user.id, {
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+      console.log(user);
+
       if (!eventById) {
         throw { name: "notFound" };
       } else {
-        res.status(200).json({ eventById });
+        res.status(200).json({ eventById, user });
       }
     } catch (error) {
       next(error);
