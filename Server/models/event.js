@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Event.belongsTo(models.Category, { foreignKey: "CategoryId" });
       Event.hasMany(models.Transaction, { foreignKey: "EventId" });
+      Event.belongsTo(models.User, {foreignKey: "UserId"})
     }
   }
   Event.init(
@@ -71,7 +72,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       isFree: DataTypes.BOOLEAN,
       price: DataTypes.INTEGER,
-      description: DataTypes.STRING
+      description: DataTypes.STRING,
+      UserId: DataTypes.INTEGER
     },
     {
       sequelize,

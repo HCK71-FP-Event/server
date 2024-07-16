@@ -24,6 +24,7 @@ class transactionCtrl {
 
   static async findById(req, res, next) {
     try {
+      console.log("masuk controller");
       let { id } = req.params;
       let result = await Transaction.findByPk(id, {
         include: [
@@ -46,6 +47,7 @@ class transactionCtrl {
         email: result.User.email,
         event: result.Event.name,
         eventDate: result.Event.eventDate,
+        ticketQuantity: result.quantity,
         status: result.status,
         grandTotal: result.amount,
       });
@@ -66,7 +68,7 @@ class transactionCtrl {
       }
 
       const user = await User.findOne({
-        id: event.UserId
+        id: event.UserId,
       });
 
       //check event ticket is available

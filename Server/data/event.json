@@ -1,54 +1,56 @@
 [
-    {
-      "name": "DWP",
-      "imageUrl": "https://example.com/imageA.jpg",
-      "location": {
-        "type": "Point",
-        "coordinates": {
-          "long": 106.7827090935093,
-          "lat": -6.26326708553454
-        }
-      },
-      "CategoryId": 1,
-      "eventDate": "2024-08-01T08:00:00Z",
-      "quantity": 100,
-      "isFree": true,
-      "price": 2000000,
-      "description": "Lorem ipsum ... ... ..."
+  {
+    "name": "DWP",
+    "imageUrl": "https://example.com/imageA.jpg",
+    "location": {
+      "type": "Point",
+      "coordinates": {
+        "long": 106.7827090935093,
+        "lat": -6.26326708553454
+      }
     },
-    {
-      "name": "Event B",
-      "imageUrl": "https://example.com/imageB.jpg",
-      "location": {
-        "type": "Point",
-        "coordinates": {
-          "long": 107.5904275402039,
-          "lat": -6.9439994342171225
-        }
-      },
-      "CategoryId": 2,
-      "eventDate": "2024-08-15T10:00:00Z",
-      "quantity": 150,
-      "isFree": false,
-      "price": 2000020,
-      "description": "Lorem ipsum ... ... ..."
+    "CategoryId": 1,
+    "eventDate": "2024-08-01T08:00:00Z",
+    "quantity": 100,
+    "isFree": true,
+    "price": 2000000,
+    "description": "Lorem ipsum ... ... ...",
+    "UserId": 1
+  },
+  {
+    "name": "Event B",
+    "imageUrl": "https://example.com/imageB.jpg",
+    "location": {
+      "type": "Point",
+      "coordinates": {
+        "long": 107.5904275402039,
+        "lat": -6.9439994342171225
+      }
     },
-    {
-      "name": "Event C",
-      "imageUrl": "https://example.com/imageC.jpg",
-      "location": {
-        "type": "Point",
-        "coordinates": {
-          "long": 106.78352565725567,
-          "lat": -6.25768668864294
-        }
-      },
-      "CategoryId": 3,
-      "eventDate": "2024-09-01T12:00:00Z",
-      "quantity": 200,
-      "isFree": true,
-      "price": 300000,
-      "description": "Lorem ipsum ... ... ..."
-    }
-  ]
-  
+    "CategoryId": 2,
+    "eventDate": "2024-08-15T10:00:00Z",
+    "quantity": 150,
+    "isFree": false,
+    "price": 2000020,
+    "description": "Lorem ipsum ... ... ...",
+    "UserId": 1
+  },
+  {
+    "name": "Event C",
+    "imageUrl": "https://example.com/imageC.jpg",
+    "location": {
+      "type": "Point",
+      "coordinates": {
+        "long": 106.78352565725567,
+        "lat": -6.25768668864294
+      }
+    },
+    "CategoryId": 3,
+    "eventDate": "2024-09-01T12:00:00Z",
+    "quantity": 200,
+    "isFree": true,
+    "price": 300000,
+    "description": "Lorem ipsum ... ... ...",
+    "UserId": 1
+  }
+]
