@@ -54,8 +54,8 @@ describe("GET /currentUser", () => {
                 .get("/currentUser")
                 .set("Authorization", `Bearer ${access_token}`)
 
-                expect(status).toBe(200)
-                expect(body).toBeInstanceOf(Object)
+            expect(status).toBe(200)
+            expect(body).toBeInstanceOf(Object)
         })
     })
 })
@@ -77,13 +77,23 @@ describe("Fail", () => {
     //     expect(status).toBe(401)
     //     expect(body).toHaveProperty("message", "Invalid token")
     // })
-    test("Fail to get currentUser, no access_token", async ()=> {
-        const{status, body} = await request(app)
-        .get("/currentUser")
-        .set("Authorization", `Bearer 1231asd`)
-        
+    test("Fail to get currentUser, no access_token", async () => {
+        const { status, body } = await request(app)
+            .get("/currentUser")
+            .set("Authorization", `Bearer 1231asd`)
+
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Invalid token")
     })
-   
+    test("Fail Internal Server Error", async () => {
+        jest.spyOn(User, "findByPk")
+            .mockRejectedValue("Internal server error")
+
+        const { status, body } = await request(app)
+            .get("/currentUser")
+            .set("Authorization", `Bearer ${access_token}`)
+
+        expect(status).toBe(500)
+        expect(body).toHaveProperty("message", "Internal server error")
+    })
 })
