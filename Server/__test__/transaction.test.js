@@ -106,6 +106,10 @@ beforeAll(async () => {
     }
 });
 
+beforeEach(()=> {
+    jest.restoreAllMocks()
+})
+
 afterAll(async () => {
     try {
         await queryInterface.bulkDelete("Transactions", null, {
@@ -134,8 +138,6 @@ afterAll(async () => {
         throw error;
     }
 });
-
-
 
 describe("POST /payment/midtrans/initiate/:eventId", () => {
     describe("Success", () => {
@@ -311,6 +313,17 @@ describe("GET /transactions", () => {
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
+        test("Fail Internal server Error", async()=> {
+            jest.spyOn(Transaction, "findAll")
+            .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+            .get("/transactions")
+            .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
+        })
     })
 })
 describe("GET /transactions/:id", () => {
@@ -334,6 +347,18 @@ describe("GET /transactions/:id", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal Server Error", async ()=> {
+            jest.spyOn(Transaction, "findByPk")
+            .mockRejectedValue("Internal server error")
+
+            const trans = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .get(`/transactions/${trans.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+    
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })

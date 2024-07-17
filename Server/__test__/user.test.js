@@ -29,7 +29,6 @@ beforeAll(async () => {
 })
 
 
-
 afterAll(async () => {
     await queryInterface.bulkDelete("Users", null, {
         truncate: true,
@@ -81,8 +80,10 @@ describe("Fail", () => {
     test("Fail to get currentUser, no access_token", async ()=> {
         const{status, body} = await request(app)
         .get("/currentUser")
+        .set("Authorization", `Bearer 1231asd`)
         
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Invalid token")
     })
+   
 })
