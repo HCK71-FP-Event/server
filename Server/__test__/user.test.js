@@ -7,7 +7,6 @@ const { createToken } = require("../helpers/jsonwebtoken")
 const { hashPassword } = require("../helpers/bcrypt")
 const { queryInterface } = sequelize
 
-
 let access_token
 
 beforeAll(async () => {
@@ -29,6 +28,11 @@ beforeAll(async () => {
 })
 
 
+beforeEach(()=> {
+    jest.restoreAllMocks()
+})
+
+
 afterAll(async () => {
     await queryInterface.bulkDelete("Users", null, {
         truncate: true,
@@ -37,17 +41,9 @@ afterAll(async () => {
     })
 
 })
-describe("GET /currentUser", () => {
-    // describe("Success", () => {
-    //     test("Success getting user id by params", async () => {
-    //         const { status, body } = await request(app)
-    //             .get("/user/1")
-    //             .set("Authorization", `Bearer ${access_token}`)
 
-    //         expect(status).toBe(200)
-    //         expect(body).toBeInstanceOf(Object)
-    //     })
-    // })
+
+describe("GET /currentUser", () => {
     describe("Success", () => {
         test("Success get currentUser", async () => {
             const { status, body } = await request(app)
@@ -58,42 +54,29 @@ describe("GET /currentUser", () => {
             expect(body).toBeInstanceOf(Object)
         })
     })
-})
+    describe("Fail", () => {
+        test("Fail to get currentUser, no access_token", async () => {
+            const { status, body } = await request(app)
+                .get("/currentUser")
+                .set("Authorization", `Bearer 1231asd`)
 
-describe("Fail", () => {
-    // test("Fail to get user id by params", async () => {
-    //     const { status, body } = await request(app)
-    //         .get("/user/123123123")
-    //         .set("Authorization", `Bearer ${access_token}`)
+            expect(status).toBe(401)
+            expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal Server Error", async () => {
+            jest.spyOn(User, "findByPk")
+                .mockRejectedValue("Internal server error")
 
-    //     expect(status).toBe(404)
-    //     expect(body).toHaveProperty("message", "Data Not Found")
-    // })
-    // test("Fail to get User because no access_token", async () => {
-    //     const { status, body } = await request(app)
-    //         .get("/user/1")
-    //         .set("Authorization", `Bearer 123123123123213123123`)
+            const { status, body } = await request(app)
+                .get("/currentUser")
+                .set("Authorization", `Bearer ${access_token}`)
 
-    //     expect(status).toBe(401)
-    //     expect(body).toHaveProperty("message", "Invalid token")
-    // })
-    test("Fail to get currentUser, no access_token", async () => {
-        const { status, body } = await request(app)
-            .get("/currentUser")
-            .set("Authorization", `Bearer 1231asd`)
-
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Invalid token")
-    })
-    test("Fail Internal Server Error", async () => {
-        jest.spyOn(User, "findByPk")
-            .mockRejectedValue("Internal server error")
-
-        const { status, body } = await request(app)
-            .get("/currentUser")
-            .set("Authorization", `Bearer ${access_token}`)
-
-        expect(status).toBe(500)
-        expect(body).toHaveProperty("message", "Internal server error")
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
+        })
     })
 })
+
+
+
+

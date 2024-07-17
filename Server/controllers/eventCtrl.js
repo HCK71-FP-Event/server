@@ -110,6 +110,7 @@ class eventCtrl {
         isFree: true,
         price: 0,
         description,
+	UserId: req.user.id
       });
       res.status(201).json({ message: `event ${result.name} created!` });
     } catch (error) {
