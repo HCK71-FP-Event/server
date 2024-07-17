@@ -390,6 +390,14 @@ describe("GET /transactions/:id", () => {
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
+        // test("Fail getting transactions id, not found", async () => {
+        //     const { status, body } = await request(app)
+        //         .get(`/transactions/123123123123`)
+        //         .set("Authorization", `Bearer ${access_token}`)
+
+        //     expect(status).toBe(404)
+        //     expect(body).toHaveProperty("message", "Data Not Found")
+        // })
         test("Fail Internal Server Error", async () => {
             jest.spyOn(Transaction, "findByPk")
                 .mockRejectedValue("Internal server error")
