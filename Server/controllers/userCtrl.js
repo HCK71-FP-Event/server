@@ -5,6 +5,7 @@ const { createToken } = require("../helpers/jsonwebtoken");
 class userCtrl {
   static async register(req, res, next) {
     try {
+	    console.log("MASUK");
       const { email, password, fullName, birthOfDate, phoneNumber, address, avatar } = req.body;
 
       if (!email) throw { name: "Email Empty" };
@@ -70,25 +71,26 @@ class userCtrl {
   //   }
   // }
 
-  // static async editUserProfile(req, res, next) {
-  //   try {
-  //     const { id } = req.user;
-  //     const { email, fullName, phoneNumber, address, avatar, birthOfDate } = req.body;
-  //     const user = await User.findByPk(id);
-  //     if (!user) throw { name: "notFound" };
-  //     await user.update({
-  //       email,
-  //       fullName,
-  //       phoneNumber,
-  //       address,
-  //       avatar,
-  //       birthOfDate,
-  //     });
-  //     res.status(200).json({ message: `User updated!` });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  static async editUserProfile(req, res, next) {
+    try {
+       const { id } = req.user;
+	    console.log(id, 'ini id');
+       const { email, fullName, phoneNumber, address, avatar, birthOfDate } = req.body;
+       const user = await User.findByPk(id);
+       if (!user) throw { name: "notFound" };
+       await user.update({
+         email,
+         fullName,
+         phoneNumber,
+         address,
+         avatar,
+         birthOfDate,
+       });
+       res.status(200).json({ message: `User updated!` });
+     } catch (error) {
+       next(error);
+     }
+   }
 
   static async findLoginUser(req, res, next) {
     try {

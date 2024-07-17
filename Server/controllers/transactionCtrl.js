@@ -6,12 +6,16 @@ class transactionCtrl {
   static async findAll(req, res, next) {
     try {
       let result = await Transaction.findAll({
-        include: {
+        include: [
+		{
           model: User,
           attributes: {
             exclude: ["password"],
           },
-        },
+        }, {
+		model: Event
+	},
+	],
         where: {
           UserId: req.user.id,
         },
@@ -39,6 +43,10 @@ class transactionCtrl {
           },
         ],
       });
+	if(!result) {
+		throw { name: "notFound" }
+	}
+	    
       res.status(200).json({
         OrderId: result.OrderId,
         name: result.User.fullName,
@@ -49,6 +57,11 @@ class transactionCtrl {
         ticketQuantity: result.quantity,
         status: result.status,
         grandTotal: result.amount,
+	paymentDate: result.createdAt,
+	      address: result.User.address,
+	      isFree: result.Event.isFree,
+	long: result.Event.location.coordinates[0],
+	lat: result.Event.location.coordinates[1]
       });
     } catch (error) {
       next(error);
