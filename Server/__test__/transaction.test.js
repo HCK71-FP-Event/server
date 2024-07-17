@@ -106,6 +106,10 @@ beforeAll(async () => {
     }
 });
 
+beforeEach(() => {
+    jest.restoreAllMocks()
+})
+
 afterAll(async () => {
     try {
         await queryInterface.bulkDelete("Transactions", null, {
@@ -128,14 +132,12 @@ afterAll(async () => {
             restartIdentity: true,
             cascade: true
         });
-       
+
     } catch (error) {
         console.error("Error during afterAll:", error);
         throw error;
     }
 });
-
-
 
 describe("POST /payment/midtrans/initiate/:eventId", () => {
     describe("Success", () => {
@@ -176,54 +178,82 @@ describe("POST /payment/midtrans/initiate/:eventId", () => {
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
         })
-        test("Fail out of stock", async ()=> {
-            const{status, body} = await request(app)
-            .post("/payment/midtrans/initiate/1")
-            .set("Authorization", `Bearer ${access_token}`)
-            .send({
-                quantity: 11
-            })
+        test("Fail out of stock", async () => {
+            const { status, body } = await request(app)
+                .post("/payment/midtrans/initiate/1")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: 11
+                })
 
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Ticket out of stock")
         })
-        test("Fail because quantity is empty", async ()=> {
-            const{status, body} = await request(app)
-            .post("/payment/midtrans/initiate/1")
-            .set("Authorization", `Bearer ${access_token}`)
-            .send({
-                quantity: 0
-            })
-           
+        test("Fail because quantity is empty", async () => {
+            const { status, body } = await request(app)
+                .post("/payment/midtrans/initiate/1")
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: 0
+                })
+
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
+        })
+        test("Fail Internal Server Error", async () => {
+            jest.spyOn(Event, "findByPk")
+                .mockRejectedValue("Internal server error")
+
+            const transaction = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/midtrans/initiate/${transaction.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })
 
-describe("POST /payment/notification", ()=> {
-    describe("Success", ()=> {
-        test("Succes get notification after payment", async()=> {
-            const {status, body } = await request(app)
-            .post("/payment/notification")
-            .send(dummyMidtrans)
+describe("POST /payment/notification", () => {
+    describe("Success", () => {
+        test("Succes get notification after payment", async () => {
+            const { status, body } = await request(app)
+                .post("/payment/notification")
+                .send(dummyMidtrans)
 
             expect(status).toBe(200)
             expect(body).toHaveProperty("message", `${dummyMidtrans.order_id} transaction paid`)
         })
     })
-    describe("Fail", ()=> {
-        test("Fail to get transaction", async()=> {
-            const{status, body}= await request(app)
-            .post("/payment/notification")
-            .send({
-                transaction_status: "capture",
-                status_code: 200,
-                order_id: "wk"
-            })
-           
+    describe("Fail", () => {
+        test("Fail to get transaction", async () => {
+            const { status, body } = await request(app)
+                .post("/payment/notification")
+                .send({
+                    transaction_status: "capture",
+                    status_code: 200,
+                    order_id: "wk"
+                })
+
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
+        })
+        test("Fail Internal Server Error", async () => {
+            jest.spyOn(Transaction, "findOne")
+                .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+                .post("/payment/notification")
+                .send(dummyMidtrans)
+
+
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })
@@ -266,28 +296,42 @@ describe("POST /payment/free-event/:eventId", () => {
             expect(status).toBe(400)
             expect(body).toHaveProperty("message", "quantity cannot be empty")
         })
-        test("Fail because out of stock", async ()=> {
+        test("Fail because out of stock", async () => {
             const transactions = await Transaction.findOne()
-            const{status, body} = await request(app)
-            .post(`/payment/free-event/${transactions.id}`)
-            .set("Authorization", `Bearer ${access_token}`)
-            .send({
-                quantity: 200
-            })
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/${transactions.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: 200
+                })
 
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Ticket out of stock")
         })
-        test("Fail because event not found", async ()=> {
-            const{status, body} = await request(app)
-            .post(`/payment/free-event/123123123`)
-            .set("Authorization", `Bearer ${access_token}`)
-            .send({
-                quantity: newTransaction.quantity
-            })
+        test("Fail because event not found", async () => {
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/123123123`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
 
             expect(status).toBe(404)
             expect(body).toHaveProperty("message", "Data Not Found")
+        })
+        test("Fail Internal Server Error", async () => {
+            jest.spyOn(Event, "findByPk")
+                .mockRejectedValue("Internal server error")
+            const transactions = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .post(`/payment/free-event/${transactions.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+                .send({
+                    quantity: newTransaction.quantity
+                })
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })
@@ -310,6 +354,17 @@ describe("GET /transactions", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal server Error", async () => {
+            jest.spyOn(Transaction, "findAll")
+                .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+                .get("/transactions")
+                .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })
@@ -334,6 +389,18 @@ describe("GET /transactions/:id", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal Server Error", async () => {
+            jest.spyOn(Transaction, "findByPk")
+                .mockRejectedValue("Internal server error")
+
+            const trans = await Transaction.findOne()
+            const { status, body } = await request(app)
+                .get(`/transactions/${trans.id}`)
+                .set("Authorization", `Bearer ${access_token}`)
+
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })

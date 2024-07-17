@@ -1,5 +1,5 @@
 const app = require("../app")
-const { User } = require("../models")
+const { User, Category} = require("../models")
 
 const request = require("supertest")
 const { sequelize } = require("../models")
@@ -40,6 +40,10 @@ beforeAll(async () => {
     access_token = createToken({ id: user.id })
 })
 
+beforeEach(()=> {
+    jest.restoreAllMocks()
+})
+
 
 
 afterAll(async () => {
@@ -73,6 +77,17 @@ describe("GET /categories", () => {
             
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal Server Error", async ()=> {
+            jest.spyOn(Category, "findAll")
+            .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+            .get("/categories")
+            .set("Authorization", `Bearer ${access_token}`)
+    
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 })

@@ -75,6 +75,10 @@ beforeAll(async () => {
     }
 });
 
+beforeEach(()=> {
+    jest.restoreAllMocks()
+})
+
 afterAll(async () => {
     try {
         await queryInterface.bulkDelete("Events", null, {
@@ -228,6 +232,17 @@ describe("GET /event", () => {
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
         })
+        test("Fail Internal Server Error", async ()=> {
+            jest.spyOn(sequelize, "query")
+            .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+            .get("/event")
+            .set("Authorization", `Bearer ${access_token}`)
+    
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
+        })
     })
 });
 
@@ -249,6 +264,17 @@ describe("GET /allEvent", () => {
 
             expect(status).toBe(401)
             expect(body).toHaveProperty("message", "Invalid token")
+        })
+        test("Fail Internal Server Error", async ()=> {
+            jest.spyOn(Event, "findAll")
+            .mockRejectedValue("Internal server error")
+
+            const { status, body } = await request(app)
+            .get("/allEvent")
+            .set("Authorization", `Bearer ${access_token}`)
+    
+            expect(status).toBe(500)
+            expect(body).toHaveProperty("message", "Internal server error")
         })
     })
 
