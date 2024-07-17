@@ -75,6 +75,10 @@ beforeAll(async () => {
     }
 });
 
+beforeEach(()=> {
+    jest.restoreAllMocks()
+})
+
 afterAll(async () => {
     try {
         await queryInterface.bulkDelete("Events", null, {
