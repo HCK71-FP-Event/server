@@ -1,6 +1,5 @@
 const { sequelize } = require("../models");
 const { Event, Category, User } = require(`../models/index`);
-const { search, options, use } = require("../routers");
 const { Sequelize } = sequelize;
 const { Op, where } = require("sequelize");
 
